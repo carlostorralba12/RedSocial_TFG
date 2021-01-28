@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var app = require('./app');
 
 // Conexion a la base de datos
-var socialNet = 'mongodb://localhost:12345/socialNet';
+var socialNet = 'mongodb://localhost:27017/socialNet';
 
 mongoose.connect(socialNet, { useNewUrlParser: true, useUnifiedTopology: true}, function(err, res) {
 
