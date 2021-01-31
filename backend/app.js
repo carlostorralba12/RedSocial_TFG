@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
     
-   res.send("Bienvenido al servidor Web");
+   res.status(200).send("Bienvenido al servidor Web");
 
 });
 
