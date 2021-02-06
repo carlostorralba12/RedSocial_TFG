@@ -9,13 +9,18 @@ function registerUser(req, res){
     var user = new User();
 
     if(params.name && params.surname && params.email && params.password){
+        // OBLIGATORY DATA
         user.name = params.name;
         user.surname = params.surname;
         user.email = params.email;
-        user.country = null;
-        user.province = null;
-        user.city = null;
-        user.image = null;
+        // OPTIONAL DATA
+      
+        user.country = params.country;
+        user.province = params.province;
+        user.city = params.city;
+        user.image = params.image;
+        
+        
         //ciframos contraseña
         bcrypt.hash(params.password, null, null, (err, hash) =>{
             user.password = hash;
