@@ -4,7 +4,35 @@ var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/user');
 
 
-function registerUser(req, res){
+function login(req, res){
+    var params = req.body;
+
+    var email = params.email;
+    var password = params.password;
+
+    User.findOne({email: email}).exec((err, user) => {
+      
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+
+        if(user){
+            bcrypt.compare(password, user.password, (err, check) => {
+                if(err) return res.status(500).send({message: 'Error en la comprobacion de contraseñas'});
+                if(check){
+                    return res.status(200).send({user});
+                }
+                else {
+                    return res.status(200).send({message: 'Las contraseñas no coinciden'});
+                }
+            })
+        }
+        else{
+            return res.status(200).send({message: 'El email no existe'});
+        }
+    });
+}
+
+// SAVE A NEW USER
+function register(req, res){
     var params = req.body;
     var user = new User();
 
@@ -14,35 +42,47 @@ function registerUser(req, res){
         user.surname = params.surname;
         user.email = params.email;
         // OPTIONAL DATA
-      
         user.country = params.country;
         user.province = params.province;
         user.city = params.city;
         user.image = params.image;
         
-        
-        //ciframos contraseña
-        bcrypt.hash(params.password, null, null, (err, hash) =>{
-            user.password = hash;
+        // Control duplicate users
+        User.find({email: user.email.toLowerCase()}).exec((err, users) => {
+            if(err) return res.status(500).send({message: 'Error al guardar un usuario'});
 
-        });
-
-        user.save((err, userRegistered) => {
-            if(err) return res.status(500).send("Error al guardar un usuario");
-
-            if(userRegistered){
-                res.status(200).send({user: userRegistered});
+            if(users && users.length >= 1){
+                return res.status(200).send({message: 'El email introducido ya existe'});
             }
+            // IF email not exists
             else{
-                res.status(404).send("No se ha registrado el usuario");
+
+                //encode password
+                bcrypt.hash(params.password, null, null, (err, hash) =>{
+                    user.password = hash;
+                    user.save((err, userRegistered) => {
+                        if(err) return res.status(500).send({message: 'Error al guardar un usuario'});
+    
+                        if(userRegistered){
+                            res.status(200).send({user: userRegistered});
+                        }
+                        else{
+                            res.status(404).send({message: 'No se ha registrado el usuario'});
+                        }
+                    });
+
+                });
             }
+
         });
+      
     }
     else{
-        res.status(200).send("Completa los datos obligatorios");
+        res.status(200).send({message: 'Completa los datos obligatorios'});
     }
 }
 
 module.exports = {
-    registerUser
+    login,
+    register
 }

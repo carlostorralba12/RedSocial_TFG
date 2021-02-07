@@ -7,7 +7,8 @@ var UserController = require('../controllers/user');
 var api = express.Router();
 
 //Rutas
-api.post('/register', UserController.registerUser);
+api.post('/register', UserController.register);
+api.post('/login', UserController.login);
 
 
 module.exports = api;
