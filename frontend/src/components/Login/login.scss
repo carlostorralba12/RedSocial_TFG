@@ -1,0 +1,16 @@
+@import '../../styles/global.scss';
+
+.login-wrapper{
+
+    .error-login{
+        font-size: 14px;
+        margin-top: 3%;
+    }
+
+    .buttons-footer{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+}

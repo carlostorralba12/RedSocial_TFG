@@ -7,7 +7,6 @@
     .forms-wrapper{
         background-color: white;
         margin: auto;
-        width: 70%;
         border-radius: 7px;
         box-shadow: 5px 10px 18px gray;
 
@@ -26,7 +25,8 @@
             border: 1px solid gray;
         }
         .buttons-actions{
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
             padding: 2%;
         }
     }

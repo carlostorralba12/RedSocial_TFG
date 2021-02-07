@@ -4,7 +4,7 @@ export default class AuthService {
     this.API_URL = "http://localhost:3000/api/" + url;
   }
     
-  register(user){
+  loginAndRegister(user){
     return fetch(this.API_URL, {
         method: 'POST',
         headers: {
@@ -12,6 +12,7 @@ export default class AuthService {
         },
         body: user
     }).then(function (respuesta) {
+        //console.log(respuesta);
         if (respuesta.ok)
             return respuesta.json();
     })
