@@ -112,6 +112,7 @@ export default {
                       _this.errorLogin =  true;
                    }
                    else{
+                      localStorage.setItem('token', res.token);
                       window.location = "http://localhost:8080/";
                    }
                 }
