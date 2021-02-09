@@ -2,6 +2,7 @@
 
 var express = require('express');
 var UserController = require('../controllers/user');
+var md_auth = require('../middlewares/auth');
 
 // para acceder a métodos GET, POST, etc.
 var api = express.Router();

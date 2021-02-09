@@ -1,6 +1,6 @@
 'use strict'
 var bcrypt = require('bcrypt-nodejs');
-
+var jwtService = require('../services/jwt.service');
 var User = require('../models/user');
 
 
@@ -18,7 +18,11 @@ function login(req, res){
             bcrypt.compare(password, user.password, (err, check) => {
                 if(err) return res.status(500).send({message: 'Error en la comprobacion de contraseñas'});
                 if(check){
-                    return res.status(200).send({user});
+                    // return and generate token
+                    return res.status(200).send({
+                        token: jwtService.createToken(user)
+                    });
+                   
                 }
                 else {
                     return res.status(200).send({message: 'Las contraseñas no coinciden'});
@@ -46,6 +50,7 @@ function register(req, res){
         user.province = params.province;
         user.city = params.city;
         user.image = params.image;
+        user.role = params.role;
         
         // Control duplicate users
         User.find({email: user.email.toLowerCase()}).exec((err, users) => {
