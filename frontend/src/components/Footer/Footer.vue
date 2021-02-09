@@ -29,7 +29,7 @@
         <v-divider></v-divider>
 
         <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>RADIS</strong>
+          {{ new Date().getFullYear() }} — <strong>RADIS </strong> <i class="far fa-copyright"></i>
         </v-card-text>
       </v-card>
       
