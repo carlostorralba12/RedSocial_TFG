@@ -2,8 +2,11 @@
 var bcrypt = require('bcrypt-nodejs');
 var jwtService = require('../services/jwt.service');
 var User = require('../models/user');
+var fs = require('fs');
+var path = require('path');
+const { param } = require('../routes/user');
 
-
+// Login user
 function login(req, res){
     var params = req.body;
 
@@ -39,8 +42,8 @@ function login(req, res){
 function register(req, res){
     var params = req.body;
     var user = new User();
-
-    if(params.name && params.surname && params.email && params.password){
+    console.log(params.name);
+    if(params.name && params.surname && params.email && params.password && params.role){
         // OBLIGATORY DATA
         user.name = params.name;
         user.surname = params.surname;
@@ -49,8 +52,31 @@ function register(req, res){
         user.country = params.country;
         user.province = params.province;
         user.city = params.city;
-        user.image = params.image;
         user.role = params.role;
+        if(req.files){
+            var filePath = req.files.image.path;
+            console.log(filePath);
+            var fileSplit = filePath.split('\\');
+            console.log(fileSplit);
+            var fileName = fileSplit[2];
+            console.log(fileName);
+            var extSplit = fileName.split('\.');
+            console.log(extSplit);
+            var extFile = extSplit[1];
+            console.log(extFile);
+
+            if(extFile == 'png' || extFile == 'jpg' || extFile == 'jpeg' || extFile == 'gif'){
+
+                user.image = fileName;
+
+            } else{
+                return fs.unlink(filePath, (err) => {
+                    res.status(200).send({message: 'La imagen no tiene el formato adecuado: (jpg, png, jpeg, gif)'});
+                });
+               
+            }
+        
+        }
         
         // Control duplicate users
         User.find({email: user.email.toLowerCase()}).exec((err, users) => {
@@ -69,6 +95,7 @@ function register(req, res){
                         if(err) return res.status(500).send({message: 'Error al guardar un usuario'});
     
                         if(userRegistered){
+                            userRegistered.password = undefined;
                             res.status(200).send({user: userRegistered});
                         }
                         else{
@@ -84,8 +111,10 @@ function register(req, res){
     }
     else{
         res.status(200).send({message: 'Completa los datos obligatorios'});
+
     }
 }
+
 
 module.exports = {
     login,

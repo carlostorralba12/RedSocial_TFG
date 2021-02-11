@@ -4,11 +4,23 @@ export default class AuthService {
     this.API_URL = "http://localhost:3000/api/" + url;
   }
     
-  loginAndRegister(user){
+  registerWithImage(user){
+
+    return fetch(this.API_URL, {
+        method: 'POST',
+        body: user
+    }).then(function (respuesta) {
+        //console.log(respuesta);
+        if (respuesta.ok)
+            return respuesta.json();
+    })
+  }
+  registerWithOutImage(user){
+
     return fetch(this.API_URL, {
         method: 'POST',
         headers: {
-            'Content-type':'application/json'
+          'Content-type':'application/json'
         },
         body: user
     }).then(function (respuesta) {
@@ -17,4 +29,19 @@ export default class AuthService {
             return respuesta.json();
     })
   }
+
+  login(user){
+    return fetch(this.API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-type':'application/json'
+      },
+      body: user
+    }).then(function (respuesta) {
+        //console.log(respuesta);
+        if (respuesta.ok)
+            return respuesta.json();
+    })
+  }
+
 }

@@ -213,7 +213,7 @@
 
                                                     <v-col>
 
-                                                    <v-text-field
+                                                        <v-text-field
                                                             v-model="city"
                                                             label="Localidad"
                                                             placeholder="San Fulgencio"
@@ -225,7 +225,7 @@
 
                                                     <v-col>
 
-                                                    <v-file-input
+                                                        <v-file-input
                                                             :rules="imageRule"
                                                             v-model="image"
                                                             accept="image/png, image/jpeg, image/bmp"
@@ -321,7 +321,40 @@ export default {
     }),
     methods: {
         registerUser: function(){
-            var user = JSON.stringify({
+            let _this = this;
+            if(this.image != null){
+                const formData = new FormData();
+                formData.append('name', this.name);
+                formData.append('surname', this.surname);
+                formData.append('email', this.email);
+                formData.append('password', this.password);
+                formData.append('country', this.country);
+                formData.append('province', this.province);
+                formData.append('city', this.city);
+                formData.append('role', this.role);
+                formData.append('image', this.image);
+
+                if(this.recaptchaVerified){
+                    this.authService.registerWithImage(formData).then(function(res){
+                        if(res){
+                            if(res.message){
+                                alert(res.message);
+                            }
+                            else{   
+                                window.location = "http://localhost:8080/login";
+                            }
+                        
+                        }
+                        else{
+                            window.alert('Registro incorrecto');
+                        }
+                    });
+                } else {
+                    this.showErrorRecaptcha = true;
+                    //window.alert('Selecciona el recaptcha');
+                }
+            } else{
+                const user = JSON.stringify({
                 name: this.name,
                 surname: this.surname,
                 email: this.email,
@@ -329,20 +362,19 @@ export default {
                 country: this.country,
                 province: this.province,
                 city: this.city,
-                role: this.role
-                //image: this.image
-            })
+                role: this.role,
+            });
+
             if(this.recaptchaVerified){
-                this.authService.loginAndRegister(user).then(function(res){
+                this.authService.registerWithOutImage(user).then(function(res){
                     if(res){
                         if(res.message){
-                            alert('El email ya existe');
+                            alert(res.message);
                         }
                         else{   
                             window.location = "http://localhost:8080/login";
                         }
                     
-
                     }
                     else{
                         window.alert('Registro incorrecto');
@@ -352,8 +384,8 @@ export default {
                 this.showErrorRecaptcha = true;
                 //window.alert('Selecciona el recaptcha');
             }
-            
-                
+            }
+
         },
         resetObligatory () {
             this.$refs.formObligatory.reset();

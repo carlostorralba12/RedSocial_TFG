@@ -106,7 +106,7 @@ export default {
                 //image: this.image
             })
             var _this = this
-            this.authService.loginAndRegister(user).then(function(res){
+            this.authService.login(user).then(function(res){
                 if(res){
                    if(res.message){
                       _this.errorLogin =  true;
