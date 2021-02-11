@@ -11,7 +11,8 @@ var userSchema = Schema({
     image: String,
     country: String,
     province: String,
-    city: String
+    city: String,
+    role: String
 });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);
