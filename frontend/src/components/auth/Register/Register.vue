@@ -274,7 +274,7 @@
 
 <script>
 
-import AuthService from '../../services/auth.service'
+import AuthService from '../../../services/auth.service'
 import  VueRecaptcha  from 'vue-recaptcha'
 export default {
     name: 'Register',

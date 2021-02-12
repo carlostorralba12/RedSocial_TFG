@@ -42,7 +42,6 @@ function login(req, res){
 function register(req, res){
     var params = req.body;
     var user = new User();
-    console.log(params.name);
     if(params.name && params.surname && params.email && params.password && params.role){
         // OBLIGATORY DATA
         user.name = params.name;
@@ -55,15 +54,10 @@ function register(req, res){
         user.role = params.role;
         if(req.files){
             var filePath = req.files.image.path;
-            console.log(filePath);
             var fileSplit = filePath.split('\\');
-            console.log(fileSplit);
             var fileName = fileSplit[2];
-            console.log(fileName);
             var extSplit = fileName.split('\.');
-            console.log(extSplit);
             var extFile = extSplit[1];
-            console.log(extFile);
 
             if(extFile == 'png' || extFile == 'jpg' || extFile == 'jpeg' || extFile == 'gif'){
 
