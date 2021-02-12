@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 // import Home from '../views/Home.vue'
 import Register from '../components/auth/Register/Register.vue'
 import Login from '../components/auth/Login/Login.vue'
+import ProfileUser from '../components/user/ProfileUser/ProfileUser.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 
 Vue.use(VueRouter)
@@ -36,6 +37,15 @@ const routes = [
     meta: {
       guest: true
     }
+  },
+  {
+    path: '/user/profile',
+    name: 'ProfileUser',
+    component: ProfileUser,
+    meta: {
+      requiresAuth: true
+    }
+
   }
 ]
 

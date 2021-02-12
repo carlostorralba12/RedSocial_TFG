@@ -36,14 +36,14 @@
       <v-btn
         class="button-register"
         color="primary"
-        to="register"
+        to="/register"
         v-if="!isAuthenticated()"
       ><i class="fas fa-user-plus" style="margin-right: 7%"></i> Regístrate</v-btn>
 
       <v-btn
         class="button-login"
         color="primary"
-        to="login"
+        to="/login"
         v-if="!isAuthenticated()"
       ><i class="fas fa-sign-in-alt" style="margin-right: 7%"></i> Accede</v-btn>
 
@@ -69,7 +69,7 @@
 
           <v-list-item link>
 
-            <v-list-item-title>Perfil</v-list-item-title>
+            <v-list-item-title @click="toProfile()">Perfil</v-list-item-title>
 
           </v-list-item>
 
@@ -94,12 +94,7 @@
 export default {
     name: 'Navbar',
     data: () => ({
-      items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
+     
     }),
     methods: {
       isAuthenticated(){
@@ -114,6 +109,11 @@ export default {
       logout() {
         localStorage.clear();
         window.location = '/login';
+      },
+      toProfile() {
+        this.$router.push({
+          path: '/user/profile'
+        })
       }
     }
 }
