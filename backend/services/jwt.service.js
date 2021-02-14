@@ -23,6 +23,13 @@ function createToken (user){
 
 }
 
+function decodeToken (token) {
+
+    return jwt.decode(token, secret);
+
+}
+
 module.exports = {
-    createToken
+    createToken,
+    decodeToken
 }

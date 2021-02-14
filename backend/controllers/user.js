@@ -52,6 +52,7 @@ function register(req, res){
         user.province = params.province;
         user.city = params.city;
         user.role = params.role;
+        // IMAGE
         if(req.files){
             var filePath = req.files.image.path;
             var fileSplit = filePath.split('\\');
@@ -109,8 +110,40 @@ function register(req, res){
     }
 }
 
+function getUser(req, res) {
+
+    var token = req.headers.authorization;
+    var user = jwtService.decodeToken(token);
+    console.log(user);
+    User.findById(user.sub, (err, userFind) => {
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+        if(!userFind) return res.status(404).send({message: 'El usuario no existe'});
+
+        userFind.password = undefined;
+        return res.status(200).send({user: userFind});
+
+    });
+
+}
+
+function deleteUser(req, res) {
+
+    var token = req.headers.authorization;
+    var user = jwtService.decodeToken(token);
+
+    User.findByIdAndDelete(user.sub, (err, userDeleted) => {
+        if(err){
+            return res.status(500).send({message: 'Error en la petición'});
+        }else {
+            return res.status(200).send({user: userDeleted});
+        }
+    });
+}
+
 
 module.exports = {
     login,
-    register
+    register,
+    getUser,
+    deleteUser
 }

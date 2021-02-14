@@ -15,19 +15,24 @@
 
                     </v-list-item-avatar>
 
-                    <v-list-item-content  style="margin-top:20px;">
+                    <v-list-item-content  style="margin-top:20px; text-transform: capitalize">
 
-                        <v-list-item-title class="title">Injamamul Haque Sonet</v-list-item-title>
-                        <v-list-item-subtitle>Médico</v-list-item-subtitle>
+                        <v-list-item-title class="title">{{user.name }} {{user.surname}}</v-list-item-title>
+                        <v-list-item-subtitle>{{user.role }}</v-list-item-subtitle>
 
                     </v-list-item-content>
 
                     <v-list-item-content style="text-align: right; margin-top: 20px">
 
-                        <v-list-item-title class="title" style="margin-top:20px;">user@gmail.com</v-list-item-title>
-                        <v-list-item-subtitle>España</v-list-item-subtitle>
-                        <v-list-item-subtitle>Alicante</v-list-item-subtitle>
-                        <v-list-item-subtitle>San Fulgencio</v-list-item-subtitle>
+                        <v-list-item-title class="title">{{user.email}}</v-list-item-title>
+                        <div style="text-transform: capitalize">
+
+                            <v-list-item-subtitle>{{user.country}}</v-list-item-subtitle>
+                            <v-list-item-subtitle>{{user.province}}</v-list-item-subtitle>
+                            <v-list-item-subtitle>{{user.city}}</v-list-item-subtitle>
+
+                        </div>
+                     
 
                     </v-list-item-content>
 
@@ -68,8 +73,8 @@
                                 Eliminar cuenta
                             </v-card-title>
 
-                            <v-card-text>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            <v-card-text style="text-align: center; font-size: 16px; margin-top: 7px">
+                                ¿Quieres darte de baja de nuestra web?
                             </v-card-text>
 
                             <v-divider></v-divider>
@@ -77,12 +82,20 @@
                             <v-card-actions>
 
                                 <v-spacer></v-spacer>
-                                <v-btn
-                                    color="primary"
+                                 <v-btn
+                                    color="secondary"
                                     text
                                     @click="dialog = false"
                                 >
-                                    I accept
+                                 Cancelar
+                                </v-btn>
+
+                                <v-btn
+                                    color="primary"
+                                    text
+                                    @click="deleteUser()"
+                                >
+                                 Aceptar
                                 </v-btn>
 
                             </v-card-actions>
@@ -106,10 +119,43 @@
 </style>
 
 <script>
+import UserService from '../../../services/user.service';
 export default {
     name: 'ProfileUser',
     data: () => ({
         dialog: false,
-    })
+        user: {},
+        userService: new UserService('user')
+    }),
+    created() {
+        var _this = this;
+        this.userService.getUser().then((res) => {
+            if(res){
+                if(res.message){
+                    alert(res.message);
+                }
+                else{
+                    _this.user = res.user;
+                }
+            }else {
+                alert(res.message);
+            }
+        });
+    },
+    methods: {
+        deleteUser() {
+            this.userService.deleteUser().then((res) => {
+                if(res){
+                    if(res.message){
+                        alert(message);
+                    }
+                    else {
+                        localStorage.clear();
+                        window.location = '/';
+                    }
+                }
+            });
+        }
+    }
 }
 </script>
