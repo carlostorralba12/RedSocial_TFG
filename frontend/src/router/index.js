@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 // import Home from '../views/Home.vue'
 import Register from '../components/auth/Register/Register.vue'
 import Login from '../components/auth/Login/Login.vue'
-import ProfileUser from '../components/user/ProfileUser/ProfileUser.vue'
+import ProfileUser from '../components/user/profile/ProfileUser.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 
 Vue.use(VueRouter)
@@ -46,7 +46,8 @@ const routes = [
       requiresAuth: true
     }
 
-  }
+  },
+ 
 ]
 
 const router = new VueRouter({

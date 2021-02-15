@@ -355,35 +355,35 @@ export default {
                 }
             } else{
                 const user = JSON.stringify({
-                name: this.name,
-                surname: this.surname,
-                email: this.email,
-                password: this.password,
-                country: this.country,
-                province: this.province,
-                city: this.city,
-                role: this.role,
-            });
-
-            if(this.recaptchaVerified){
-                this.authService.registerWithOutImage(user).then(function(res){
-                    if(res){
-                        if(res.message){
-                            alert(res.message);
-                        }
-                        else{   
-                            window.location = "http://localhost:8080/login";
-                        }
-                    
-                    }
-                    else{
-                        window.alert('Registro incorrecto');
-                    }
+                    name: this.name,
+                    surname: this.surname,
+                    email: this.email,
+                    password: this.password,
+                    country: this.country,
+                    province: this.province,
+                    city: this.city,
+                    role: this.role,
                 });
-            } else {
-                this.showErrorRecaptcha = true;
-                //window.alert('Selecciona el recaptcha');
-            }
+
+                if(this.recaptchaVerified){
+                    this.authService.registerWithOutImage(user).then(function(res){
+                        if(res){
+                            if(res.message){
+                                alert(res.message);
+                            }
+                            else{   
+                                window.location = "http://localhost:8080/login";
+                            }
+                        
+                        }
+                        else{
+                            window.alert('Registro incorrecto');
+                        }
+                    });
+                } else {
+                    this.showErrorRecaptcha = true;
+                    //window.alert('Selecciona el recaptcha');
+                }
             }
 
         },

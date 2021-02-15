@@ -114,7 +114,6 @@ function getUser(req, res) {
 
     var token = req.headers.authorization;
     var user = jwtService.decodeToken(token);
-    console.log(user);
     User.findById(user.sub, (err, userFind) => {
         if(err) return res.status(500).send({message: 'Error en la petición'});
         if(!userFind) return res.status(404).send({message: 'El usuario no existe'});

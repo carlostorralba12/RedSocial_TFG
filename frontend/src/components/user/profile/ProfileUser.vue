@@ -40,15 +40,7 @@
 
                 <v-col class="text-right">
                     
-                    
-                    <v-btn
-                        depressed
-                        color="primary"
-                        elevation="4"
-                        style="margin-right: 1%"
-                    >
-                        Editar datos
-                    </v-btn>
+                    <EditUser/>
                     <!--DIALOG TO REMOVE ACCOUNT-->
 
                     <v-dialog
@@ -120,8 +112,12 @@
 
 <script>
 import UserService from '../../../services/user.service';
+import EditUser from '../edit/EditUser';
 export default {
     name: 'ProfileUser',
+    components: {
+        EditUser
+    },
     data: () => ({
         dialog: false,
         user: {},
