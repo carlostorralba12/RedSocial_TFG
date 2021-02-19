@@ -78,7 +78,7 @@
 </style>
 
 <script>
- import AuthService from '../../services/auth.service';
+ import AuthService from '../../../services/auth.service';
 export default {
    name: 'Login',
    data: () => ({

@@ -36,14 +36,14 @@
       <v-btn
         class="button-register"
         color="primary"
-        to="register"
+        to="/register"
         v-if="!isAuthenticated()"
       ><i class="fas fa-user-plus" style="margin-right: 7%"></i> Regístrate</v-btn>
 
       <v-btn
         class="button-login"
         color="primary"
-        to="login"
+        to="/login"
         v-if="!isAuthenticated()"
       ><i class="fas fa-sign-in-alt" style="margin-right: 7%"></i> Accede</v-btn>
 
@@ -51,25 +51,28 @@
 
         <template v-slot:activator="{ on, attrs }">
 
-           <v-avatar 
-              color="indigo"  
-              v-bind="attrs"
-              v-on="on">
-            <v-icon dark>
+          <div v-bind="attrs"
+                v-on="on">
+              <v-avatar color="indigo">
+                
+                  <v-icon dark>
 
-              mdi-account-circle
+                    mdi-account-circle
 
-            </v-icon>
+                  </v-icon>
+      
+              </v-avatar>
+              {{user.name}}
 
-          </v-avatar>
-
+          </div>
+          
         </template>
-
+        
         <v-list>
 
           <v-list-item link>
 
-            <v-list-item-title>Perfil</v-list-item-title>
+            <v-list-item-title @click="toProfile()">Cuenta</v-list-item-title>
 
           </v-list-item>
 
@@ -91,16 +94,33 @@
 </style>
 
 <script>
+import UserService from '../../services/user.service';
 export default {
     name: 'Navbar',
     data: () => ({
-      items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
+      user: {},
+      userService: new UserService('user')
     }),
+    created() {
+        var _this = this;
+        let token = localStorage.getItem('token');
+
+        if(token != null){
+            this.userService.getUser().then((res) => {
+                if(res){
+                    if(res.message){
+                        alert(res.message);
+                    }
+                    else{
+                        _this.user = res.user;
+                    }
+                }else {
+                    alert(res.message);
+                }
+            });
+        }
+        
+    },
     methods: {
       isAuthenticated(){
         let token = localStorage.getItem('token');
@@ -114,6 +134,9 @@ export default {
       logout() {
         localStorage.clear();
         window.location = '/login';
+      },
+      toProfile() {
+         window.location = '/user/profile';
       }
     }
 }
