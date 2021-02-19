@@ -30,6 +30,22 @@ export default class UserService {
                 return respuesta.json();
         })
     }
+
+    updateUser(user){
+        var token = localStorage.getItem("token");
+        return fetch(this.API_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-type':'application/json',
+                'Authorization': token
+            },
+            body:user
+        }).then(function (respuesta) {
+            //console.log(respuesta);
+            if (respuesta.ok)
+                return respuesta.json();
+        })
+    }
   
 }
   

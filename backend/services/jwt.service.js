@@ -8,13 +8,7 @@ function createToken (user){
 
     var payload = {
         sub: user._id,
-        name: user.name,
-        surname: user.surname,
         email: user.email,
-        image: user.image,
-        country: user.country,
-        province: user.province,
-        city: user.city,
         iat: moment().unix(),
         exp: moment().add(30, 'days').unix
     };

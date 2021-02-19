@@ -30,97 +30,59 @@
           <v-container>
 
             <div class="header-section">Obligatorios</div>
-            <v-row>
 
-                <v-col>
+            <v-form v-model="obligatoryForm">
 
-                    <v-text-field 
-                        v-model="user.name" 
-                        :rules="nameRules"
-                        :counter="15"
-                        label="Nombre"
-                        placeholder="Carlos"
-                        shaped
-                        outlined
-                        required
-                    ></v-text-field>
+                <v-row>
 
-                </v-col>
+                    <v-col>
 
-                <v-col>
+                        <v-text-field 
+                            v-model="user.name" 
+                            :rules="nameRules"
+                            :counter="15"
+                            label="Nombre"
+                            placeholder="Carlos"
+                            shaped
+                            outlined
+                            required
+                        ></v-text-field>
 
-                    <v-text-field
-                        v-model="user.surname"
-                        label="Apellidos"
-                        placeholder="Torralba Ruiz"
-                        shaped
-                        outlined
-                        required
-                    ></v-text-field>
+                    </v-col>
 
-                </v-col>
+                    <v-col>
 
-            </v-row>
+                        <v-text-field
+                            v-model="user.surname"
+                            :rules="nameRules"
+                            label="Apellidos"
+                            placeholder="Torralba Ruiz"
+                            shaped
+                            outlined
+                            required
+                        ></v-text-field>
 
-            <v-row>
+                    </v-col>
 
-                <v-col>
+                </v-row>
 
-                    <v-text-field
-                        v-model="user.email"
-                        :rules="emailRules"
-                        label="Email"
-                        placeholder="carlos@gmail.com"
-                        shaped
-                        outlined
-                        required
-                    ></v-text-field>
-                    
-                </v-col>
+                <v-row>
 
-            </v-row>
+                    <v-col>
 
-            <v-row>
+                        <v-text-field
+                            v-model="user.email"
+                            :rules="emailRules"
+                            label="Email"
+                            placeholder="carlos@gmail.com"
+                            shaped
+                            outlined
+                            required
+                        ></v-text-field>
+                        
+                    </v-col>
 
-                <v-col>
-
-                    <v-text-field
-                        v-model="password"
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[rules.min]"
-                        :type="showPassword ? 'text' : 'password'"
-                        label="Contraseña"
-                        hint="Al menos 8 caracteres"
-                        counter
-                        outlined
-                        shaped
-                        @click:append="showPassword = !showPassword"
-                    ></v-text-field>
-
-                </v-col>
-
-                <v-col>
-
-                    <v-text-field
-                        v-model="rePassword"
-                        :append-icon="showRePassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[rules.min, (password === rePassword) || 'La contraseña no coincide']"
-                        :type="showRePassword ? 'text' : 'password'"
-                        label="Repita la contraseña"
-                        hint="Al menos 8 caracteres"
-                        counter
-                        outlined
-                        shaped
-                        @click:append="showRePassword = !showRePassword"
-                    ></v-text-field>
-
-                </v-col>
-                
-            </v-row>
-              
-            <v-row>
-
-              <v-col>
+                </v-row>
 
                 <v-radio-group
                     v-model="user.role"
@@ -151,9 +113,8 @@
 
                 </v-radio-group>
 
-              </v-col>  
-              
-            </v-row>
+            </v-form>
+            
 
             <div class="header-section">Opcionales</div>
 
@@ -174,7 +135,7 @@
                 <v-col>
 
                     <v-text-field
-                        v-model="province"
+                        v-model="user.province"
                         label="Provincia"
                         placeholder="Alicante"
                         shaped
@@ -234,7 +195,8 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            :disabled="!obligatoryForm"
+            @click="updateUser()"
           >
             Guardar
           </v-btn>
@@ -256,9 +218,10 @@ import UserService from '../../../services/user.service';
   export default {
     name: 'EditUser',
     data: () => ({
+        obligatoryForm: false,
         dialog: false,
-        name: null,
-        surname: null,
+        name: undefined,
+        surname: undefined,
         nameRules: [
             v => !!v || 'Este campo es obligatorio',
             v => !!v && v.length <= 15 || 'El nombre debe ser menor a 15 caracteres'
@@ -270,8 +233,8 @@ import UserService from '../../../services/user.service';
         ],
         showPassword: false,
         showRePassword: false,
-        password: null,
-        rePassword: null,
+        password: undefined,
+        rePassword: undefined,
         rules: {
             min: v => !!v && v.length >= 8 || 'Mínimo 8 caracteres',
             emailMatch: () => ("The email and password you entered don't match")
@@ -282,11 +245,11 @@ import UserService from '../../../services/user.service';
         imageRule: [
             value => !value || value.size < 2000000 || 'Avatar size should be less than 2 MB!'
         ],
-        country: null,
-        province: null,
-        city: null,
-        image: null,
-        role: null,
+        country: undefined,
+        province: undefined,
+        city: undefined,
+        image: undefined,
+        role: undefined,
         user: {},
         userService: new UserService('user')
 
@@ -306,5 +269,32 @@ import UserService from '../../../services/user.service';
             }
         });
     },
+    methods: {
+          updateUser() {
+            const userToUpdate = JSON.stringify({
+                name: this.user.name,
+                surname: this.user.surname,
+                email: this.user.email,
+                password: this.password,
+                country: this.user.country,
+                province: this.user.province,
+                city: this.user.city,
+                role: this.user.role,
+            });
+            var _this = this;
+            this.userService.updateUser(userToUpdate).then((res) => {
+                if(res){
+                    if(res.message){
+                        alert(res.message);
+                    }
+                    else {
+                        //localStorage.clear();
+                        this.$emit('clicked', true);
+                        _this.dialog = false;
+                    }
+                }
+            });
+        }
+    }
   }
 </script>

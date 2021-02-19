@@ -125,6 +125,40 @@ function getUser(req, res) {
 
 }
 
+function updateUser(req, res){
+
+    var userToUpdate = req.body;
+
+    var token = req.headers.authorization;
+    var userToken = jwtService.decodeToken(token);
+
+    // Control duplicate email to update
+    User.find({email: userToUpdate.email.toLowerCase()}).exec((err, users) => {
+        if(err) return res.status(500).send({message: 'Error al guardar un usuario'});
+
+        if(users && users.length >= 1 && userToken.email != userToUpdate.email){
+            return res.status(200).send({message: 'El email introducido ya existe'});
+        } else {
+
+            bcrypt.hash(userToUpdate.password, null, null, (err, hash) =>{
+                if(userToUpdate.password){
+                    userToUpdate.password = hash;
+                }
+                User.findByIdAndUpdate(userToken.sub, userToUpdate, {new: true}, (err, userUpdated) => {
+                    if(err) return res.status(500).send({message: 'Error en la petición'});
+                    if(!userUpdated) return res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+                    // No enviamos la password
+                    userUpdated.password = undefined;
+                    return res.status(200).send({user: userUpdated});
+                });
+            });
+
+        }
+
+    });
+  
+}
+
 function deleteUser(req, res) {
 
     var token = req.headers.authorization;
@@ -144,5 +178,6 @@ module.exports = {
     login,
     register,
     getUser,
-    deleteUser
+    deleteUser,
+    updateUser
 }

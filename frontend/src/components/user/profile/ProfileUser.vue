@@ -40,7 +40,7 @@
 
                 <v-col class="text-right">
                     
-                    <EditUser/>
+                    <EditUser @clicked="checkUpdate"/>
                     <!--DIALOG TO REMOVE ACCOUNT-->
 
                     <v-dialog
@@ -90,18 +90,33 @@
                                  Aceptar
                                 </v-btn>
 
-                            </v-card-actions>
 
+                            </v-card-actions>
+                            
                         </v-card>
 
                     </v-dialog>
 
                 </v-col>
+                <div>
+                     <v-alert
+                        outlined
+                        type="success"
+                        text
+                        dismissible
+                        v-model="updated"
+                    >
+                        Ha modificado correctamente sus datos de usuario.
+                    </v-alert>
 
+                </div>
+               
             </v-row>
 
+        
         </v-card>
-  
+    
+    
     </v-container>
 
 </template>
@@ -121,6 +136,7 @@ export default {
     data: () => ({
         dialog: false,
         user: {},
+        updated: false,
         userService: new UserService('user')
     }),
     created() {
@@ -151,6 +167,26 @@ export default {
                     }
                 }
             });
+        },
+        checkUpdate(value) {
+            if(value){
+                this.updated = value;
+                var _this = this;
+                this.userService.getUser().then((res) => {
+                    if(res){
+                        if(res.message){
+                            alert(res.message);
+                        }
+                        else{
+                            _this.user = res.user;
+                        }
+                    }else {
+                        alert(res.message);
+                    }
+                });
+            }
+            //this.updated = false;
+           
         }
     }
 }

@@ -136,9 +136,7 @@ export default {
         window.location = '/login';
       },
       toProfile() {
-        this.$router.push({
-          path: '/user/profile'
-        })
+         window.location = '/user/profile';
       }
     }
 }
