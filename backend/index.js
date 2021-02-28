@@ -1,24 +1,19 @@
 'use strict'
 
-
-var mongoose = require('mongoose');
-mongoose.set('useFindAndModify', false);
+const mongoose = require("mongoose");
 var app = require('./app');
+mongoose.set('useFindAndModify', false);
+var config = require('./config');
 
-// Conexion a la base de datos
-var socialNet = 'mongodb://localhost:27017/socialNet';
-
-mongoose.connect(socialNet, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false}, function(err, res) {
+mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false}, function(err, res) {
 
     if(err){
         console.log("Error al conectar con socialNet: " + `${err}`);
     } else {
         console.log("Conectado con la BD socialNet");
         // Crear servidor web
-        app.listen(3000, function() {
-            console.log("Servidor Web: http://localhost:3000");
+        app.listen(config.port, function() {
+            console.log("Servidor Web: http://localhost:" + `${config.port}`);
         });
     }
-
 });
-    

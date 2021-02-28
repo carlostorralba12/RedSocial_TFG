@@ -53,25 +53,7 @@ function register(req, res){
         user.city = params.city;
         user.role = params.role;
         // IMAGE
-        if(req.files){
-            var filePath = req.files.image.path;
-            var fileSplit = filePath.split('\\');
-            var fileName = fileSplit[2];
-            var extSplit = fileName.split('\.');
-            var extFile = extSplit[1];
-
-            if(extFile == 'png' || extFile == 'jpg' || extFile == 'jpeg' || extFile == 'gif'){
-
-                user.image = fileName;
-
-            } else{
-                return fs.unlink(filePath, (err) => {
-                    res.status(200).send({message: 'La imagen no tiene el formato adecuado: (jpg, png, jpeg, gif)'});
-                });
-               
-            }
-        
-        }
+        user.image = params.image;
         
         // Control duplicate users
         User.find({email: user.email.toLowerCase()}).exec((err, users) => {

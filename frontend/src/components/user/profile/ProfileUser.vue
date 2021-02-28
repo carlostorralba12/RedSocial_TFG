@@ -3,6 +3,7 @@
     <v-container>
 
         <v-card class="mx-auto" max-width="1000" tile>
+            
             <v-img height="200" src="https://www.cedars-sinai.org/content/dam/cedars-sinai/blog/2019/02/RareDiseases.jpg"></v-img>
 
             <v-row class="user-info-container">
@@ -11,7 +12,23 @@
 
                     <v-list-item-avatar size="200">
 
-                        <v-img src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"></v-img>
+                        <template v-if="image">
+                            <v-img size="200" :src="'http://localhost:3000/api/image/show/' + user.image"></v-img>
+                        </template>
+                       
+                        <template v-else>
+                             <v-avatar color="indigo" size="200">
+                
+                                <v-icon dark size="150">
+
+                                    mdi-account-circle
+
+                                </v-icon>
+                    
+                            </v-avatar>
+
+                        </template>
+                       
 
                     </v-list-item-avatar>
 
@@ -127,6 +144,7 @@
 
 <script>
 import UserService from '../../../services/user.service';
+import ImageService from '../../../services/image.service';
 import EditUser from '../edit/EditUser';
 export default {
     name: 'ProfileUser',
@@ -137,6 +155,9 @@ export default {
         dialog: false,
         user: {},
         updated: false,
+        image: false,
+        imageService: null,
+        imageUser: undefined,
         userService: new UserService('user')
     }),
     created() {
@@ -148,6 +169,10 @@ export default {
                 }
                 else{
                     _this.user = res.user;
+                    _this.imageUser = _this.user.image;
+                    if(_this.user.image != null){
+                        _this.image = true;
+                    }
                 }
             }else {
                 alert(res.message);
@@ -156,6 +181,21 @@ export default {
     },
     methods: {
         deleteUser() {
+            // eliminamos la imagen de la base de datos
+            if(this.imageUser != undefined){
+
+                var _this = this;
+                this.imageService = new ImageService(this.imageUser);
+                this.imageService.getImage().then((res) => {
+                    if(res){
+                        _this.imageService = new ImageService(res.image._id);
+                        _this.imageService.deleteImage();
+                    }
+                    else {
+                        alert('No se ha obtenido ninguna imagen');
+                    }
+                });
+            }
             this.userService.deleteUser().then((res) => {
                 if(res){
                     if(res.message){
@@ -179,6 +219,8 @@ export default {
                         }
                         else{
                             _this.user = res.user;
+                            alert("Usuario actualizado");
+                            location.reload();
                         }
                     }else {
                         alert(res.message);

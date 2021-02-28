@@ -164,7 +164,7 @@
 
                     <v-file-input
                         :rules="imageRule"
-                        v-model="user.image"
+                        v-model="image"
                         accept="image/png, image/jpeg, image/bmp"
                         prepend-icon="mdi-camera"
                         label="Imagen"
@@ -215,6 +215,7 @@
 
 <script>
 import UserService from '../../../services/user.service';
+import ImageService from '../../../services/image.service';
   export default {
     name: 'EditUser',
     data: () => ({
@@ -250,7 +251,9 @@ import UserService from '../../../services/user.service';
         city: undefined,
         image: undefined,
         role: undefined,
+        imageUser: null,
         user: {},
+        imageService: null,
         userService: new UserService('user')
 
     }),
@@ -263,6 +266,7 @@ import UserService from '../../../services/user.service';
                 }
                 else{
                     _this.user = res.user;
+                    _this.imageUser = res.user.image;
                 }
             }else {
                 alert(res.message);
@@ -280,8 +284,32 @@ import UserService from '../../../services/user.service';
                 province: this.user.province,
                 city: this.user.city,
                 role: this.user.role,
+                image: this.image.name
             });
             var _this = this;
+            if(this.image != null){
+                // si el usuario tenia una imagen
+                if(this.imageUser != undefined){
+                    this.imageService = new ImageService(this.user.image);
+                    this.imageService.getImage().then((res) => {
+                        if(res){
+                            _this.imageService = new ImageService(res.image._id);
+                            _this.imageService.deleteImage();
+                        }
+                        else {
+                            alert('No se ha obtenido ninguna imagen');
+                        }
+                    });
+                    
+                    
+
+                }
+                this.imageService = new ImageService('store');
+                const formData = new FormData();
+                formData.append('image', this.image);
+                this.imageService.storeImage(formData);
+                
+            }
             this.userService.updateUser(userToUpdate).then((res) => {
                 if(res){
                     if(res.message){
@@ -289,8 +317,9 @@ import UserService from '../../../services/user.service';
                     }
                     else {
                         //localStorage.clear();
+                         _this.dialog = false;
                         this.$emit('clicked', true);
-                        _this.dialog = false;
+                       
                     }
                 }
             });
