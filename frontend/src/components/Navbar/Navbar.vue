@@ -53,16 +53,31 @@
 
           <div v-bind="attrs"
                 v-on="on">
-              <v-avatar color="indigo">
-                
-                  <v-icon dark>
+              <v-list-item-avatar size="50">
 
-                    mdi-account-circle
+                <template v-if="image">
+              
+                  <v-img :src="'http://localhost:3000/api/image/show/' + user.image"></v-img>
+                        
+                </template>
+        
+                <template v-else>
 
-                  </v-icon>
-      
-              </v-avatar>
-              {{user.name}}
+                    <v-avatar color="indigo">
+                  
+                      <v-icon dark>
+
+                        mdi-account-circle
+
+                      </v-icon>
+          
+                  </v-avatar>
+
+                </template>
+
+              </v-list-item-avatar>
+              <!--{{user.name}}-->
+
 
           </div>
           
@@ -99,6 +114,7 @@ export default {
     name: 'Navbar',
     data: () => ({
       user: {},
+      image: false,
       userService: new UserService('user')
     }),
     created() {
@@ -113,6 +129,9 @@ export default {
                     }
                     else{
                         _this.user = res.user;
+                        if(_this.user.image != null){
+                            _this.image = true;
+                        }
                     }
                 }else {
                     alert(res.message);

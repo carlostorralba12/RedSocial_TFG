@@ -9,6 +9,7 @@ var app = express();
 
 //cargar rutas
 var usersRoutes = require('./routes/user');
+var imageRoutes = require('./routes/images');
 
 //cors
 // configurar cabeceras http
@@ -29,5 +30,6 @@ app.use(bodyParser.json());
 // rutas
 
 app.use('/api', usersRoutes);
+app.use('/api', imageRoutes);
 
 module.exports = app;
