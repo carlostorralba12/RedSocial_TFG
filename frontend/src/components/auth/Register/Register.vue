@@ -274,7 +274,8 @@
 
 <script>
 
-import AuthService from '../../services/auth.service'
+import AuthService from '../../../services/auth.service'
+import ImageService from '../../../services/image.service'
 import  VueRecaptcha  from 'vue-recaptcha'
 export default {
     name: 'Register',
@@ -317,44 +318,28 @@ export default {
         city: null,
         image: null,
         role: null,
-        authService : new AuthService('register')
+        authService : new AuthService('register'),
+        imageService: new ImageService('store')
     }),
     methods: {
-        registerUser: function(){
-            let _this = this;
-            if(this.image != null){
-                const formData = new FormData();
-                formData.append('name', this.name);
-                formData.append('surname', this.surname);
-                formData.append('email', this.email);
-                formData.append('password', this.password);
-                formData.append('country', this.country);
-                formData.append('province', this.province);
-                formData.append('city', this.city);
-                formData.append('role', this.role);
-                formData.append('image', this.image);
-
-                if(this.recaptchaVerified){
-                    this.authService.registerWithImage(formData).then(function(res){
-                        if(res){
-                            if(res.message){
-                                alert(res.message);
-                            }
-                            else{   
-                                window.location = "http://localhost:8080/login";
-                            }
-                        
-                        }
-                        else{
-                            window.alert('Registro incorrecto');
-                        }
-                    });
-                } else {
-                    this.showErrorRecaptcha = true;
-                    //window.alert('Selecciona el recaptcha');
+        registerApi (user) {
+             this.authService.register(user).then(function(res){
+                if(res){
+                    if(res.message){
+                        alert(res.message);
+                    }
+                    else{   
+                        window.location = "http://localhost:8080/login";
+                    }
+                
                 }
-            } else{
-                const user = JSON.stringify({
+                else{
+                    window.alert('Registro incorrecto');
+                }
+            });
+        },
+        registerUser () {
+            const user = JSON.stringify({
                 name: this.name,
                 surname: this.surname,
                 email: this.email,
@@ -366,26 +351,31 @@ export default {
             });
 
             if(this.recaptchaVerified){
-                this.authService.registerWithOutImage(user).then(function(res){
-                    if(res){
-                        if(res.message){
-                            alert(res.message);
-                        }
-                        else{   
-                            window.location = "http://localhost:8080/login";
-                        }
-                    
-                    }
-                    else{
-                        window.alert('Registro incorrecto');
-                    }
-                });
+                if(this.image != null){
+                    const formData = new FormData();
+                    formData.append('image', this.image);
+                    this.imageService.storeImage(formData);
+                     const userImage = JSON.stringify({
+                        name: this.name,
+                        surname: this.surname,
+                        email: this.email,
+                        password: this.password,
+                        country: this.country,
+                        province: this.province,
+                        city: this.city,
+                        role: this.role,
+                        image: this.image.name
+                    });
+                    this.registerApi(userImage);
+                }
+                else {
+                    this.registerApi(user);
+                }
             } else {
                 this.showErrorRecaptcha = true;
                 //window.alert('Selecciona el recaptcha');
             }
-            }
-
+               
         },
         resetObligatory () {
             this.$refs.formObligatory.reset();

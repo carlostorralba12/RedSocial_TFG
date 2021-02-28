@@ -42,7 +42,6 @@ function login(req, res){
 function register(req, res){
     var params = req.body;
     var user = new User();
-    console.log(params.name);
     if(params.name && params.surname && params.email && params.password && params.role){
         // OBLIGATORY DATA
         user.name = params.name;
@@ -53,30 +52,8 @@ function register(req, res){
         user.province = params.province;
         user.city = params.city;
         user.role = params.role;
-        if(req.files){
-            var filePath = req.files.image.path;
-            console.log(filePath);
-            var fileSplit = filePath.split('\\');
-            console.log(fileSplit);
-            var fileName = fileSplit[2];
-            console.log(fileName);
-            var extSplit = fileName.split('\.');
-            console.log(extSplit);
-            var extFile = extSplit[1];
-            console.log(extFile);
-
-            if(extFile == 'png' || extFile == 'jpg' || extFile == 'jpeg' || extFile == 'gif'){
-
-                user.image = fileName;
-
-            } else{
-                return fs.unlink(filePath, (err) => {
-                    res.status(200).send({message: 'La imagen no tiene el formato adecuado: (jpg, png, jpeg, gif)'});
-                });
-               
-            }
-        
-        }
+        // IMAGE
+        user.image = params.image;
         
         // Control duplicate users
         User.find({email: user.email.toLowerCase()}).exec((err, users) => {
@@ -115,8 +92,74 @@ function register(req, res){
     }
 }
 
+function getUser(req, res) {
+
+    var token = req.headers.authorization;
+    var user = jwtService.decodeToken(token);
+    User.findById(user.sub, (err, userFind) => {
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+        if(!userFind) return res.status(404).send({message: 'El usuario no existe'});
+
+        userFind.password = undefined;
+        return res.status(200).send({user: userFind});
+
+    });
+
+}
+
+function updateUser(req, res){
+
+    var userToUpdate = req.body;
+
+    var token = req.headers.authorization;
+    var userToken = jwtService.decodeToken(token);
+
+    // Control duplicate email to update
+    User.find({email: userToUpdate.email.toLowerCase()}).exec((err, users) => {
+        if(err) return res.status(500).send({message: 'Error al guardar un usuario'});
+
+        if(users && users.length >= 1 && userToken.email != userToUpdate.email){
+            return res.status(200).send({message: 'El email introducido ya existe'});
+        } else {
+
+            bcrypt.hash(userToUpdate.password, null, null, (err, hash) =>{
+                if(userToUpdate.password){
+                    userToUpdate.password = hash;
+                }
+                User.findByIdAndUpdate(userToken.sub, userToUpdate, {new: true}, (err, userUpdated) => {
+                    if(err) return res.status(500).send({message: 'Error en la petición'});
+                    if(!userUpdated) return res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+                    // No enviamos la password
+                    userUpdated.password = undefined;
+                    return res.status(200).send({user: userUpdated});
+                });
+            });
+
+        }
+
+    });
+  
+}
+
+function deleteUser(req, res) {
+
+    var token = req.headers.authorization;
+    var user = jwtService.decodeToken(token);
+
+    User.findByIdAndDelete(user.sub, (err, userDeleted) => {
+        if(err){
+            return res.status(500).send({message: 'Error en la petición'});
+        }else {
+            return res.status(200).send({user: userDeleted});
+        }
+    });
+}
+
 
 module.exports = {
     login,
-    register
+    register,
+    getUser,
+    deleteUser,
+    updateUser
 }
