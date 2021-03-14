@@ -5,6 +5,7 @@ import Register from '../components/auth/Register/Register.vue'
 import Login from '../components/auth/Login/Login.vue'
 import ProfileUser from '../components/user/profile/ProfileUser.vue'
 import HelloWorld from '../components/HelloWorld.vue'
+import AllCommunities from '../components/communities/allCommunities/AllCommunities.vue'
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,14 @@ const routes = [
       requiresAuth: true
     }
 
+  },
+  {
+    path: '/communities',
+    name: 'AllCommunities',
+    component: AllCommunities,
+    meta: {
+      requiresAuth: true
+    }
   },
  
 ]
