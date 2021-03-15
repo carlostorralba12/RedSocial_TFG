@@ -73,9 +73,9 @@ function deleteCommunity(req, res){
 
 
 function getCommunity(req,res){
-    var communityName = req.body.name;
+    var communityId = req.params.id;
 
-    Community.findOne({name: communityName}).exec((err, community) => {
+    Community.findById(communityId, (err, community) => {
         if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
         return res.status(200).send({community: community});
     });

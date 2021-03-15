@@ -5,7 +5,8 @@ import Register from '../components/auth/Register/Register.vue'
 import Login from '../components/auth/Login/Login.vue'
 import ProfileUser from '../components/user/profile/ProfileUser.vue'
 import HelloWorld from '../components/HelloWorld.vue'
-import AllCommunities from '../components/communities/allCommunities/AllCommunities.vue'
+import Communities from '../components/communities/Communities.vue'
+import Community from '../components/communities/community/Community.vue'
 
 Vue.use(VueRouter)
 
@@ -50,8 +51,16 @@ const routes = [
   },
   {
     path: '/communities',
-    name: 'AllCommunities',
-    component: AllCommunities,
+    name: 'Communities',
+    component: Communities,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/community/:id',
+    name: 'Community',
+    component: Community,
     meta: {
       requiresAuth: true
     }

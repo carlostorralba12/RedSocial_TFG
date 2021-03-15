@@ -3,7 +3,9 @@
     <v-container>
 
         <div class="header-communities">
+
             <h1>Comunidades</h1>
+
             <v-responsive max-width="400">
                 <v-text-field
                 dense
@@ -16,7 +18,12 @@
             </v-responsive>
 
         </div>
-            
+        
+        <div v-if="userRole == 'admin'">
+          
+            <AddCommunity/>
+
+        </div>
             
         <div class="body-communities" v-for="item in paginatedData" :key="item._id">
 
@@ -34,7 +41,7 @@
                         alt="Vuetify Logo"
                         class="shrink mr-2"
                         contain
-                        :src="require('../../../assets/iconoRadis.png')" 
+                        :src="require('../../assets/iconoRadis.png')" 
                         transition="scale-transition"
                         width="50"
                         />
@@ -54,13 +61,29 @@
                                 rounded
                                 color="info"
                                 dark
+                                :to="{ name: 'Community', params: {id: item._id } }"
+
                                 >
                                 Detalles
                             </v-btn>
 
                         </div>
 
-                        <div>
+                        <div v-if="userRole == 'admin'">
+                             <v-btn
+                                rounded
+                                color="error"
+                                dark
+                            >
+                                <v-icon left>mdi-delete</v-icon>
+                                
+                                <span> Eliminar</span> 
+                                
+                            </v-btn>
+                           
+                        </div>
+
+                        <div v-else>
 
                             <v-btn
                                 rounded
@@ -71,7 +94,7 @@
                                 
                                 <span> Seguir</span> 
                                 
-                            </v-btn>
+                            </v-btn> 
 
                         </div>
                     
@@ -101,20 +124,24 @@
 </template>
 
 <style scoped lang="scss">
-    @import './allCommunities.scss';
+    @import './communities.scss';
 </style>
 
 <script>
-
-import CommunityService from '../../../services/community.service';
+import AddCommunity from './AddCommunity';
+import CommunityService from '../../services/community.service';
 export default {
     name: 'AllCommunities',
+    components: {
+        AddCommunity
+    },
     data: () => ({
         pageNumber: 1,
         size: 5,
         communityService: new CommunityService(),
         items: [],
         lengthItemsPagination: 0,
+        userRole: localStorage.getItem('role')
     }),
     created(){
         var _this = this;
@@ -125,12 +152,9 @@ export default {
                 }
                 else {
                     _this.items = res.communities;
-                    console.log(res.communities);
-                    console.log(_this.items.length);
                    
-                  
-                    if(_this.items.length > 5){
-                       _this.lengthItemsPagination = _this.lengthItemsPagination/5;    
+                    if(_this.items.length > 3){
+                       _this.lengthItemsPagination = _this.lengthItemsPagination/3;    
                     }
                 }   
             }

@@ -23,12 +23,13 @@
       <v-spacer></v-spacer>
 
       <!--BUTON COMMUNITIES-->
-      <v-btn class="d-flex align-center" height="50px" to="/communities">
+      <v-btn 
+        rounded
+        dark
+        text 
+        to="/communities"
+      >
         Comunidades
-      </v-btn>
-      <!--BUTON ADMIN-->
-      <v-btn class="d-flex align-center" height="50px" to="/admin">
-        Administración
       </v-btn>
  
       <v-btn
@@ -127,6 +128,7 @@ export default {
                     }
                     else{
                         _this.user = res.user;
+                        localStorage.setItem('role', res.user.role);
                         if(_this.user.image != null){
                             _this.image = true;
                         }
