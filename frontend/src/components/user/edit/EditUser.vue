@@ -284,10 +284,21 @@ import ImageService from '../../../services/image.service';
                 province: this.user.province,
                 city: this.user.city,
                 role: this.user.role,
-                image: this.image.name
+                //image: this.image.name
             });
             var _this = this;
             if(this.image != null){
+                const userToUpdate = JSON.stringify({
+                    name: this.user.name,
+                    surname: this.user.surname,
+                    email: this.user.email,
+                    password: this.password,
+                    country: this.user.country,
+                    province: this.user.province,
+                    city: this.user.city,
+                    role: this.user.role,
+                    image: this.image.name
+                });
                 // si el usuario tenia una imagen
                 if(this.imageUser != undefined){
                     this.imageService = new ImageService(this.user.image);
