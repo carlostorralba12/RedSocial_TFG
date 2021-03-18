@@ -7,19 +7,30 @@
             <v-img  max-height="300" src='../../../assets/Comunidad.jpg'></v-img>
             <v-card-title>
 
-                <v-img
-                    alt="Vuetify Logo"
-                    class="shrink mr-2"
-                    contain
-                    :src="require('../../../assets/iconoRadis.png')" 
-                    transition="scale-transition"
-                    width="50"
-                    />
-                <span class="headline font-weight-bold">{{community.name}}</span>
+               
+                <div class="title-card">
+                    
+                    <div class="title-logo">
+                        <v-img
+                            alt="Vuetify Logo"
+                            class="shrink mr-2"
+                            contain
+                            :src="require('../../../assets/iconoRadis.png')" 
+                            transition="scale-transition"
+                            width="45"
+                        />
 
+                        <span class="headline font-weight-bold">{{community.name}}</span>
+                    </div>
+                    <DeleteCommunity v-if="userRole == 'admin'" v-bind:idCommunity="community._id"></DeleteCommunity>
+                </div>
+                
+         
+                
             </v-card-title>
 
             <v-card-text class="title font-weight-bold">
+
                 <div class="card-row">
 
                     <div class="card">
@@ -32,6 +43,7 @@
                             <v-card-text class="title font-weight-bold">
                                 {{community.symtoms}}
                             </v-card-text>
+
                         </v-card>
                     </div>
 
@@ -84,15 +96,27 @@
 
                     <v-btn
                         rounded
-                        color="info"
+                        color="orange darken-2"
                         dark
+                        to="/communities"
+                    >
+                        <v-icon
+                            dark
+                            left
                         >
-                        Detalles
+                            mdi-arrow-left
+                        </v-icon>Comunidades
                     </v-btn>
 
                 </div>
 
-                <div>
+                <div v-if="userRole == 'admin'">
+
+                    <UpdateCommunity v-bind:community="community"></UpdateCommunity>
+
+                </div>
+
+                <div v-else>
 
                     <v-btn
                         rounded
@@ -119,16 +143,22 @@
     @import './community.scss';
 </style>
 <script>
+import DeleteCommunity from '../DeleteCommunity'
+import UpdateCommunity from '../UpdateCommunity'
 import CommunityService from '../../../services/community.service'
 export default {
     name: 'Community',
+    components: {
+        DeleteCommunity,
+        UpdateCommunity
+    },
     data: () => ({
         community: {},
-        communityService: new CommunityService()
+        communityService: new CommunityService(),
+        userRole: localStorage.getItem('role')
     }),
     created(){
         var id = this.$route.params.id;
-        console.log(id);
         var _this = this;
         this.communityService.getCommunity(id).then((res) => {
             if(res){
@@ -137,7 +167,6 @@ export default {
                 }
                 else{
                     _this.community = res.community;
-                    console.log(res.community);
                 }
             }
         });

@@ -7,9 +7,9 @@ var mdAuth = require('../middlewares/auth');
 var api = express.Router();
 
 api.post('/community', mdAuth.ensureAuth, CommunityController.saveCommunity);
-api.delete('/community', mdAuth.ensureAuth, CommunityController.deleteCommunity);
+api.delete('/community/:id', mdAuth.ensureAuth, CommunityController.deleteCommunity);
 api.get('/community/:id', mdAuth.ensureAuth, CommunityController.getCommunity);
-api.put('/community', mdAuth.ensureAuth, CommunityController.updateCommunity);
+api.put('/community/:id', mdAuth.ensureAuth, CommunityController.updateCommunity);
 api.get('/communities', mdAuth.ensureAuth, CommunityController.getCommunities);
 
 module.exports = api

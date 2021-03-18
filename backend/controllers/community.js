@@ -33,9 +33,8 @@ function saveCommunity(req, res){
 }
 
 function updateCommunity(req, res){
-    var id = req.body.id;
+    var id = req.params.id;
     var communityRequest = req.body;
-    communityRequest.id = null;
     Community.find({name: communityRequest.name}).exec((err, communities) => {
         if(err) return res.status(500).send({message: 'Error al guardar una comunidad'});
 
@@ -45,7 +44,6 @@ function updateCommunity(req, res){
             }
                       
         }
-        console.log(communityRequest);
         Community.findByIdAndUpdate(id, communityRequest, {new: true} ,(err, communityUpdated) => {
             if(err) return res.status(500).send({message: 'Error al actualizar una comunidad'});
             if(communityUpdated){
@@ -56,19 +54,16 @@ function updateCommunity(req, res){
 }
 
 function deleteCommunity(req, res){
-    var communityName = req.body.name;
-
-    Community.findOne({name: communityName}).exec((err, community) => {
-        if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
-
-        Community.findByIdAndDelete(community._id, (err, communityDeleted) => {
-            if(err){
-                return res.status(500).send({message: 'Error en la petición'});
-            }else {
-                return res.status(200).send({community: communityDeleted});
-            }
-        });
+    var communityId = req.params.id;
+    
+    Community.findByIdAndDelete(communityId, (err, communityDeleted) => {
+        if(err){
+            return res.status(500).send({message: 'Error en la petición'});
+        }else {
+            return res.status(200).send({community: communityDeleted});
+        }
     });
+  
 }
 
 

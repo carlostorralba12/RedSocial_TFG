@@ -25,7 +25,7 @@
 
         </div>
             
-        <div class="body-communities" v-for="item in paginatedData" :key="item._id">
+        <div class="body-communities" v-for="item in paginatedData">
 
             <template>
                     
@@ -70,17 +70,9 @@
                         </div>
 
                         <div v-if="userRole == 'admin'">
-                             <v-btn
-                                rounded
-                                color="error"
-                                dark
-                            >
-                                <v-icon left>mdi-delete</v-icon>
-                                
-                                <span> Eliminar</span> 
-                                
-                            </v-btn>
                            
+                           <DeleteCommunity v-bind:idCommunity="item._id"></DeleteCommunity>
+
                         </div>
 
                         <div v-else>
@@ -109,7 +101,7 @@
         <div class="text-center">
             <v-pagination
             v-model="pageNumber"
-            :length="0"
+            :length="lengthItemsPagination"
             :total-visible="7"
             @input="nextPage"
             circle
@@ -129,15 +121,18 @@
 
 <script>
 import AddCommunity from './AddCommunity';
+import DeleteCommunity from './DeleteCommunity';
 import CommunityService from '../../services/community.service';
 export default {
-    name: 'AllCommunities',
+    name: 'Communities',
     components: {
-        AddCommunity
+        AddCommunity,
+        DeleteCommunity
     },
     data: () => ({
         pageNumber: 1,
-        size: 5,
+        size: 3,
+        dialog: false,
         communityService: new CommunityService(),
         items: [],
         lengthItemsPagination: 0,
@@ -152,9 +147,16 @@ export default {
                 }
                 else {
                     _this.items = res.communities;
-                   
-                    if(_this.items.length > 3){
-                       _this.lengthItemsPagination = _this.lengthItemsPagination/3;    
+                    var communitiesLength = _this.items.length;
+                    if(communitiesLength > 3){
+                        if(communitiesLength % 3 == 0){
+                            _this.lengthItemsPagination = parseInt(communitiesLength / 3);
+                        }
+                        else {
+                            _this.lengthItemsPagination = parseInt(communitiesLength / 3) + 1;
+                        }
+                     
+                       console.log(_this.lengthItemsPagination);    
                     }
                 }   
             }

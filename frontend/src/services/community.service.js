@@ -1,7 +1,7 @@
 
 export default class CommunityService {
     constructor () {
-      this.API_URL = "http://localhost:3000/api/community";
+      this.API_URL = "http://localhost:3000/api/community/";
     }
     saveCommunity(community){
         var token = localStorage.getItem("token");
@@ -33,7 +33,7 @@ export default class CommunityService {
         })
     }
     getCommunity(id){
-        this.API_URL = "http://localhost:3000/api/community/" + id;
+        this.API_URL = this.API_URL + id;
         var token = localStorage.getItem("token");
         return fetch(this.API_URL, {
             method: 'GET',
@@ -46,7 +46,8 @@ export default class CommunityService {
                 return respuesta.json();
         })
     }
-    deleteCommunity(){
+    deleteCommunity(id){
+        this.API_URL = this.API_URL + id;
         var token = localStorage.getItem("token");
         return fetch(this.API_URL, {
             method: 'DELETE',
@@ -60,7 +61,8 @@ export default class CommunityService {
         })
     }
 
-    updateCommunity(community){
+    updateCommunity(id,community){
+        this.API_URL = this.API_URL + id;
         var token = localStorage.getItem("token");
         return fetch(this.API_URL, {
             method: 'PUT',
