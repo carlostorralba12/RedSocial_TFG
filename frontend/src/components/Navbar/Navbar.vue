@@ -27,11 +27,19 @@
         rounded
         dark
         text 
+        to="/users"
+      >
+        Usuarios
+      </v-btn>
+      <v-btn 
+        rounded
+        dark
+        text 
         to="/communities"
       >
         Comunidades
       </v-btn>
- 
+  
       <v-btn
         class="button-register"
         color="primary"

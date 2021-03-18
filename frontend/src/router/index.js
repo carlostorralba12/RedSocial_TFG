@@ -3,10 +3,11 @@ import VueRouter from 'vue-router'
 // import Home from '../views/Home.vue'
 import Register from '../components/auth/Register/Register.vue'
 import Login from '../components/auth/Login/Login.vue'
-import ProfileUser from '../components/user/profile/ProfileUser.vue'
+import ProfileUser from '../components/users/detail/ProfileUser.vue'
 import HelloWorld from '../components/HelloWorld.vue'
 import Communities from '../components/communities/Communities.vue'
 import Community from '../components/communities/community/Community.vue'
+import Users from '../components/users/Users.vue'
 
 Vue.use(VueRouter)
 
@@ -53,6 +54,14 @@ const routes = [
     path: '/communities',
     name: 'Communities',
     component: Communities,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: Users,
     meta: {
       requiresAuth: true
     }

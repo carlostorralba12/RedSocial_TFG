@@ -107,6 +107,22 @@ function getUser(req, res) {
 
 }
 
+function getUsers(req, res) {
+
+    var token = req.headers.authorization;
+    var user = jwtService.decodeToken(token);
+    User.find((err, users) => {
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+        if(!users) return res.status(404).send({message: 'El usuario no existe'});
+        users.forEach(user => {
+            user.password = undefined;
+        });
+        return res.status(200).send({users: users});
+
+    });
+
+}
+
 function updateUser(req, res){
 
     var userToUpdate = req.body;
@@ -161,5 +177,6 @@ module.exports = {
     register,
     getUser,
     deleteUser,
-    updateUser
+    updateUser,
+    getUsers
 }

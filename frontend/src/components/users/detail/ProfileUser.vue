@@ -145,7 +145,7 @@
 <script>
 import UserService from '../../../services/user.service';
 import ImageService from '../../../services/image.service';
-import EditUser from '../edit/EditUser';
+import EditUser from './edit/EditUser';
 export default {
     name: 'ProfileUser',
     components: {

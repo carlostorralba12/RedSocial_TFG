@@ -214,8 +214,8 @@
 </style>
 
 <script>
-import UserService from '../../../services/user.service';
-import ImageService from '../../../services/image.service';
+import UserService from '../../../../services/user.service';
+import ImageService from '../../../../services/image.service';
   export default {
     name: 'EditUser',
     data: () => ({

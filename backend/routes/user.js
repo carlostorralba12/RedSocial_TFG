@@ -13,7 +13,8 @@ var api = express.Router();
 api.post('/register',mdUpload, UserController.register);
 api.post('/login',UserController.login);
 api.get('/user', mdAuth.ensureAuth, UserController.getUser);
-api.put('/user', mdAuth.ensureAuth, UserController.updateUser)
-api.delete('/user', mdAuth.ensureAuth, UserController.deleteUser)
+api.put('/user', mdAuth.ensureAuth, UserController.updateUser);
+api.delete('/user', mdAuth.ensureAuth, UserController.deleteUser);
+api.get('/users', mdAuth.ensureAuth, UserController.getUsers);
 
 module.exports = api;

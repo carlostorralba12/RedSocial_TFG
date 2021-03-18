@@ -46,6 +46,20 @@ export default class UserService {
                 return respuesta.json();
         })
     }
+
+    getUsers(){
+        var token = localStorage.getItem("token");
+        return fetch(this.API_URL, {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            },
+        }).then(function (respuesta) {
+            //console.log(respuesta);
+            if (respuesta.ok)
+                return respuesta.json();
+        })
+    }
   
 }
   
