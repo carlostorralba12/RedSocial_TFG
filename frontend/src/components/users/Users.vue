@@ -17,11 +17,17 @@
 
         </div>
         
-        <div v-if="userRole == 'admin'">
-          
-            
-
-        </div>
+        <v-btn
+            rounded
+            color="success"
+            dark
+            to="/addUser"
+        >
+            Añadir 
+            <v-icon right>
+                mdi-plus
+            </v-icon>
+        </v-btn>
             
         <div class="body-users">
             <div  v-for="user in paginatedData" :key="user.id">
@@ -62,6 +68,7 @@
                                 rounded
                                 color="info"
                                 dark
+                                :to="{ name: 'detailUser', params: {id: user._id } }"
                                 style="margin: 0 0 0 auto"
                                 >
                                 Ver perfil

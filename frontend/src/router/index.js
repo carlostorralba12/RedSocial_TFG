@@ -8,6 +8,7 @@ import HelloWorld from '../components/HelloWorld.vue'
 import Communities from '../components/communities/Communities.vue'
 import Community from '../components/communities/community/Community.vue'
 import Users from '../components/users/Users.vue'
+import AddUser from '../components/users/detail/add/AddUser.vue'
 
 Vue.use(VueRouter)
 
@@ -42,11 +43,21 @@ const routes = [
     }
   },
   {
-    path: '/user/profile',
+    path: '/profile/:id',
     name: 'ProfileUser',
     component: ProfileUser,
     meta: {
       requiresAuth: true
+    }
+
+  },
+  {
+    path: '/users/:id',
+    name: 'detailUser',
+    component: ProfileUser,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
     }
 
   },
@@ -63,7 +74,17 @@ const routes = [
     name: 'Users',
     component: Users,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      is_admin: true
+    }
+  },
+  {
+    path: '/addUser',
+    name: 'AddUser',
+    component: AddUser,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
     }
   },
   {
@@ -91,13 +112,14 @@ router.beforeEach((to, from, next) => {
               params: { nextUrl: to.fullPath }
           })
       } else {
-          let user = JSON.parse(localStorage.getItem('user'))
+          let role = localStorage.getItem('role')
           if(to.matched.some(record => record.meta.is_admin)) {
-              if(user.is_admin == 1){
+              if(role == 'admin'){
                   next()
               }
               else{
-                  next({ name: ''})
+                  alert("No tienes permisos");
+                  location.href = '/';
               }
           }else {
               next()

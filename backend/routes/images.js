@@ -40,7 +40,7 @@ const storage = new GridFsStorage({
           if (err) {
             return reject(err);
           }
-          console.log(file.originalname);
+          //console.log(file.originalname);
           const filename = file.originalname;
           const fileInfo = {
             buffer: buf,
