@@ -1,0 +1,38 @@
+@import '../../../../styles/global.scss';
+
+.add-user-wrapper{
+
+    .forms-wrapper{
+        background-color: white;
+        margin: auto;
+        border-radius: 7px;
+
+        .header-section{
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: x-large;
+            padding: 2%;
+        }
+        .data-form{
+            background-color: $form-colors;
+            margin: auto;
+            width: 90%;
+            border-radius: 7px;
+            border: 1px solid gray;
+        }
+        .buttons-actions{
+            display: flex;
+            justify-content: space-between;
+            padding: 2%;
+        }
+        .radio-buttons{
+         
+            width: 100%;
+    
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+    
+}

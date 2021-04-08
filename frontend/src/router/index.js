@@ -3,8 +3,12 @@ import VueRouter from 'vue-router'
 // import Home from '../views/Home.vue'
 import Register from '../components/auth/Register/Register.vue'
 import Login from '../components/auth/Login/Login.vue'
-import ProfileUser from '../components/user/profile/ProfileUser.vue'
+import ProfileUser from '../components/users/detail/ProfileUser.vue'
 import HelloWorld from '../components/HelloWorld.vue'
+import Communities from '../components/communities/Communities.vue'
+import Community from '../components/communities/community/Community.vue'
+import Users from '../components/users/Users.vue'
+import AddUser from '../components/users/detail/add/AddUser.vue'
 
 Vue.use(VueRouter)
 
@@ -39,13 +43,57 @@ const routes = [
     }
   },
   {
-    path: '/user/profile',
+    path: '/profile/:id',
     name: 'ProfileUser',
     component: ProfileUser,
     meta: {
       requiresAuth: true
     }
 
+  },
+  {
+    path: '/users/:id',
+    name: 'detailUser',
+    component: ProfileUser,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
+    }
+
+  },
+  {
+    path: '/communities',
+    name: 'Communities',
+    component: Communities,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: Users,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
+    }
+  },
+  {
+    path: '/addUser',
+    name: 'AddUser',
+    component: AddUser,
+    meta: {
+      requiresAuth: true,
+      is_admin: true
+    }
+  },
+  {
+    path: '/community/:id',
+    name: 'Community',
+    component: Community,
+    meta: {
+      requiresAuth: true
+    }
   },
  
 ]
@@ -64,13 +112,14 @@ router.beforeEach((to, from, next) => {
               params: { nextUrl: to.fullPath }
           })
       } else {
-          let user = JSON.parse(localStorage.getItem('user'))
+          let role = localStorage.getItem('role')
           if(to.matched.some(record => record.meta.is_admin)) {
-              if(user.is_admin == 1){
+              if(role == 'admin'){
                   next()
               }
               else{
-                  next({ name: ''})
+                  alert("No tienes permisos");
+                  location.href = '/';
               }
           }else {
               next()

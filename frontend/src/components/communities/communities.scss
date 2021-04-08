@@ -1,0 +1,14 @@
+@import '../../styles/variables.scss';
+
+.header-communities{
+    display: flex;
+    justify-content: space-between;
+    background-color: $section;
+    margin: 1% 0;
+    padding: 2%;
+    border-radius: 5px;
+}
+
+.body-communities{
+    margin: 0 1%;
+}

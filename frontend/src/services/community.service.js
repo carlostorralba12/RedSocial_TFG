@@ -1,24 +1,25 @@
 
-export default class UserService {
-    constructor (url) {
-      this.API_URL = "http://localhost:3000/api/" + url;
+export default class CommunityService {
+    constructor () {
+      this.API_URL = "http://localhost:3000/api/community/";
     }
-      
-    getUser(id){
-        var url = this.API_URL + id;
+    saveCommunity(community){
         var token = localStorage.getItem("token");
-        return fetch(url, {
-            method: 'GET',
+        return fetch(this.API_URL, {
+            method: 'POST',
             headers: {
+                'Content-type':'application/json',
                 'Authorization': token
             },
+            body:community
         }).then(function (respuesta) {
             //console.log(respuesta);
             if (respuesta.ok)
                 return respuesta.json();
         })
     }
-    getProfile(){
+    getCommunities(){
+        this.API_URL = "http://localhost:3000/api/communities";
         var token = localStorage.getItem("token");
         return fetch(this.API_URL, {
             method: 'GET',
@@ -31,10 +32,24 @@ export default class UserService {
                 return respuesta.json();
         })
     }
-    deleteUser(id){
-        var url = this.API_URL + id;
+    getCommunity(id){
+        this.API_URL = this.API_URL + id;
         var token = localStorage.getItem("token");
-        return fetch(url, {
+        return fetch(this.API_URL, {
+            method: 'GET',
+            headers: {
+                'Authorization': token
+            },
+        }).then(function (respuesta) {
+            //console.log(respuesta);
+            if (respuesta.ok)
+                return respuesta.json();
+        })
+    }
+    deleteCommunity(id){
+        this.API_URL = this.API_URL + id;
+        var token = localStorage.getItem("token");
+        return fetch(this.API_URL, {
             method: 'DELETE',
             headers: {
                 'Authorization': token
@@ -46,45 +61,16 @@ export default class UserService {
         })
     }
 
-    updateUser(user,id){
-        var url = this.API_URL + id;
+    updateCommunity(id,community){
+        this.API_URL = this.API_URL + id;
         var token = localStorage.getItem("token");
-        return fetch(url, {
+        return fetch(this.API_URL, {
             method: 'PUT',
             headers: {
                 'Content-type':'application/json',
                 'Authorization': token
             },
-            body:user
-        }).then(function (respuesta) {
-            //console.log(respuesta);
-            if (respuesta.ok)
-                return respuesta.json();
-        })
-    }
-    saveUser(user){
-        var token = localStorage.getItem("token");
-        return fetch(this.API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-type':'application/json',
-                'Authorization': token
-            },
-            body:user
-        }).then(function (respuesta) {
-            //console.log(respuesta);
-            if (respuesta.ok)
-                return respuesta.json();
-        })
-    }
-
-    getUsers(){
-        var token = localStorage.getItem("token");
-        return fetch(this.API_URL, {
-            method: 'GET',
-            headers: {
-                'Authorization': token
-            },
+            body:community
         }).then(function (respuesta) {
             //console.log(respuesta);
             if (respuesta.ok)
