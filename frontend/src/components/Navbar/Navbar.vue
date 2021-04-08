@@ -26,12 +26,21 @@
       <v-btn 
         rounded
         dark
+        text
+        v-if="user.role == 'admin'"
+        to="/users"
+      >
+        Usuarios
+      </v-btn>
+      <v-btn 
+        rounded
+        dark
         text 
         to="/communities"
       >
         Comunidades
       </v-btn>
- 
+  
       <v-btn
         class="button-register"
         color="primary"
@@ -84,9 +93,9 @@
         
         <v-list>
 
-          <v-list-item link>
+          <v-list-item link :href="'/profile/' + user._id" >
 
-            <v-list-item-title @click="toProfile()">Cuenta</v-list-item-title>
+            <v-list-item-title >Cuenta</v-list-item-title>
 
           </v-list-item>
 
@@ -114,14 +123,14 @@ export default {
     data: () => ({
       user: {},
       image: false,
-      userService: new UserService('user')
+      userService: new UserService('users/profile')
     }),
     created() {
         var _this = this;
         let token = localStorage.getItem('token');
 
         if(token != null){
-            this.userService.getUser().then((res) => {
+            this.userService.getProfile().then((res) => {
                 if(res){
                     if(res.message){
                         alert(res.message);
@@ -154,9 +163,6 @@ export default {
         localStorage.clear();
         window.location = '/login';
       },
-      toProfile() {
-         window.location = '/user/profile';
-      }
     }
 };
 </script>

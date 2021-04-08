@@ -214,8 +214,8 @@
 </style>
 
 <script>
-import UserService from '../../../services/user.service';
-import ImageService from '../../../services/image.service';
+import UserService from '../../../../services/user.service';
+import ImageService from '../../../../services/image.service';
   export default {
     name: 'EditUser',
     data: () => ({
@@ -254,12 +254,13 @@ import ImageService from '../../../services/image.service';
         imageUser: null,
         user: {},
         imageService: null,
-        userService: new UserService('user')
+        userService: new UserService('users/')
 
     }),
      created() {
         var _this = this;
-        this.userService.getUser().then((res) => {
+        var id = this.$route.params.id;
+        this.userService.getUser(id).then((res) => {
             if(res){
                 if(res.message){
                     alert(res.message);
@@ -275,7 +276,7 @@ import ImageService from '../../../services/image.service';
     },
     methods: {
           updateUser() {
-            const userToUpdate = JSON.stringify({
+            var userToUpdate = JSON.stringify({
                 name: this.user.name,
                 surname: this.user.surname,
                 email: this.user.email,
@@ -288,7 +289,7 @@ import ImageService from '../../../services/image.service';
             });
             var _this = this;
             if(this.image != null){
-                const userToUpdate = JSON.stringify({
+                userToUpdate = JSON.stringify({
                     name: this.user.name,
                     surname: this.user.surname,
                     email: this.user.email,
@@ -300,7 +301,7 @@ import ImageService from '../../../services/image.service';
                     image: this.image.name
                 });
                 // si el usuario tenia una imagen
-                if(this.imageUser != undefined){
+                if(this.imageUser != null){
                     this.imageService = new ImageService(this.user.image);
                     this.imageService.getImage().then((res) => {
                         if(res){
@@ -321,7 +322,8 @@ import ImageService from '../../../services/image.service';
                 this.imageService.storeImage(formData);
                 
             }
-            this.userService.updateUser(userToUpdate).then((res) => {
+            var id = this.$route.params.id;
+            this.userService.updateUser(userToUpdate, id).then((res) => {
                 if(res){
                     if(res.message){
                         alert(res.message);

@@ -55,6 +55,22 @@
 
                 </v-list-item>
 
+                <v-col class="text-left" v-if="detailUser">
+                      <v-btn
+                        rounded
+                        color="orange darken-2"
+                        dark
+                        to="/users"
+                    >
+                        <v-icon
+                            dark
+                            left
+                        >
+                            mdi-arrow-left
+                        </v-icon>Usuarios
+                    </v-btn>
+
+                </v-col>
                 <v-col class="text-right">
                     
                     <EditUser @clicked="checkUpdate"/>
@@ -115,18 +131,6 @@
                     </v-dialog>
 
                 </v-col>
-                <div>
-                     <v-alert
-                        outlined
-                        type="success"
-                        text
-                        dismissible
-                        v-model="updated"
-                    >
-                        Ha modificado correctamente sus datos de usuario.
-                    </v-alert>
-
-                </div>
                
             </v-row>
 
@@ -145,7 +149,7 @@
 <script>
 import UserService from '../../../services/user.service';
 import ImageService from '../../../services/image.service';
-import EditUser from '../edit/EditUser';
+import EditUser from './edit/EditUser';
 export default {
     name: 'ProfileUser',
     components: {
@@ -153,16 +157,21 @@ export default {
     },
     data: () => ({
         dialog: false,
+        detailUser: false,
         user: {},
         updated: false,
         image: false,
         imageService: null,
         imageUser: undefined,
-        userService: new UserService('user')
+        userService: new UserService('users/')
     }),
     created() {
         var _this = this;
-        this.userService.getUser().then((res) => {
+        var id = this.$route.params.id;
+        if(this.$route.name == 'detailUser'){
+            this.detailUser = true;
+        }
+        this.userService.getUser(id).then((res) => {
             if(res){
                 if(res.message){
                     alert(res.message);
@@ -174,17 +183,15 @@ export default {
                         _this.image = true;
                     }
                 }
-            }else {
-                alert(res.message);
             }
         });
     },
     methods: {
         deleteUser() {
+            var _this = this;
             // eliminamos la imagen de la base de datos
             if(this.imageUser != undefined){
 
-                var _this = this;
                 this.imageService = new ImageService(this.imageUser);
                 this.imageService.getImage().then((res) => {
                     if(res){
@@ -196,38 +203,31 @@ export default {
                     }
                 });
             }
-            this.userService.deleteUser().then((res) => {
+            this.userService.deleteUser(this.user._id).then((res) => {
                 if(res){
                     if(res.message){
                         alert(message);
                     }
                     else {
-                        localStorage.clear();
-                        window.location = '/';
+                        if(_this.detailUser){
+                            alert('Usuario eliminado');
+                            location.href = '/users';
+                        }
+                        else {
+                            localStorage.clear();
+                            window.location = '/';
+                        }
                     }
                 }
             });
         },
         checkUpdate(value) {
+            this.updated = value;
             if(value){
-                this.updated = value;
-                var _this = this;
-                this.userService.getUser().then((res) => {
-                    if(res){
-                        if(res.message){
-                            alert(res.message);
-                        }
-                        else{
-                            _this.user = res.user;
-                            alert("Usuario actualizado");
-                            location.reload();
-                        }
-                    }else {
-                        alert(res.message);
-                    }
-                });
+                alert("Usuario actualizado");
+                location.reload();
             }
-            //this.updated = false;
+            
            
         }
     }

@@ -25,7 +25,7 @@
 
         </div>
             
-        <div class="body-communities" v-for="item in paginatedData">
+        <div class="body-communities" v-for="item in paginatedData" :key="item.id">
 
             <template>
                     
@@ -109,8 +109,6 @@
             </v-pagination>                   
         </div>
           
-        
-       
     </v-container>
  
 </template>
@@ -134,7 +132,7 @@ export default {
         size: 3,
         dialog: false,
         communityService: new CommunityService(),
-        items: [],
+        communities: [],
         lengthItemsPagination: 0,
         userRole: localStorage.getItem('role')
     }),
@@ -146,8 +144,8 @@ export default {
                     alert(res.message);
                 }
                 else {
-                    _this.items = res.communities;
-                    var communitiesLength = _this.items.length;
+                    _this.communities = res.communities;
+                    var communitiesLength = _this.communities.length;
                     if(communitiesLength > 3){
                         if(communitiesLength % 3 == 0){
                             _this.lengthItemsPagination = parseInt(communitiesLength / 3);
@@ -169,14 +167,14 @@ export default {
     },
     computed: {
         pageCount() {
-            let l = this.items.length,
+            let l = this.communities.length,
                 s = this.size;
             return Math.ceil(l / s) - 1;
         },
         paginatedData() {
             const start = this.pageNumber * this.size - this.size,
                 end = start + this.size;
-            return this.items.slice(start, end);
+            return this.communities.slice(start, end);
         }
     }
 }
