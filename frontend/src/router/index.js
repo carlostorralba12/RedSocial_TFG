@@ -9,6 +9,7 @@ import Communities from '../components/communities/Communities.vue'
 import Community from '../components/communities/community/Community.vue'
 import Users from '../components/users/Users.vue'
 import AddUser from '../components/users/detail/add/AddUser.vue'
+import Discussions from '../components/discussions/Discussions.vue'
 
 Vue.use(VueRouter)
 
@@ -91,6 +92,14 @@ const routes = [
     path: '/community/:id',
     name: 'Community',
     component: Community,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/community/:id/discussions',
+    name: 'Discussions',
+    component: Discussions,
     meta: {
       requiresAuth: true
     }
