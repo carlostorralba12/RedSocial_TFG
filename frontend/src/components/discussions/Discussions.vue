@@ -2,9 +2,9 @@
 
     <v-container>
 
-         <v-card>
+         <v-card style="margin: 0 5%">
 
-            <v-img  max-height="300" src='../../assets/Comunidad.jpg'></v-img>
+            <v-img  max-height="450" src='../../assets/discussions.jpg'></v-img>
 
             <v-card-title>
 
@@ -25,7 +25,12 @@
                             dark
                             :to="{ name: 'Community', params: {idCom: community._id } }"
                         >
-
+                            <v-icon
+                                dark
+                                left
+                            >
+                                mdi-arrow-left
+                            </v-icon>
                             <span class="headline font-weight-bold">{{community.name}} </span>
 
                         </v-btn>
@@ -60,6 +65,7 @@
                                         rounded
                                         color="info"
                                         dark
+                                        :to="{ name: 'Discussion', params: {idCom: community._id, idDis: item._id} }"
                                         >
                                         Detalles
                                     </v-btn>
