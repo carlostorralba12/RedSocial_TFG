@@ -20,7 +20,18 @@
                             width="45"
                         />
 
-                        <span class="headline font-weight-bold">{{community.name}}</span>
+                        <span class="headline font-weight-bold">{{community.name}} </span>
+                        <v-btn
+                            rounded
+                            color="blue-grey lighten-3"
+                            dark
+                            style="margin-left: 2%"
+                            :to="{ name: 'Discussions', params: {idCom: community._id } }"
+                            
+                        >
+                            <span> Discusiones</span> 
+                            
+                        </v-btn>
                     </div>
                     <DeleteCommunity v-if="userRole == 'admin'" v-bind:idCommunity="community._id"></DeleteCommunity>
                 </div>
