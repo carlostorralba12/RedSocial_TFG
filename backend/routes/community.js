@@ -16,4 +16,7 @@ api.delete('/community/:idCom/discussion/:idDis', mdAuth.ensureAuth, CommunityCo
 api.put('/community/:idCom/discussion/:idDis', mdAuth.ensureAuth, CommunityController.updateDiscussion);
 api.get('/community/:idCom/discussion/:idDis', mdAuth.ensureAuth, CommunityController.getDiscussion);
 api.get('/community/:idCom/discussions', mdAuth.ensureAuth, CommunityController.getDiscussions)
+api.post('/community/:idCom/discussion/:idDis/posts', mdAuth.ensureAuth, CommunityController.addPost)
+api.delete('/community/:idCom/discussion/:idDis/posts/:idPost', mdAuth.ensureAuth, CommunityController.deletePost)
+api.put('/community/:idCom/discussion/:idDis/posts/:idPost', mdAuth.ensureAuth, CommunityController.updatePost)
 module.exports = api
