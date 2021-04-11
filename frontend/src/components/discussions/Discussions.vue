@@ -38,8 +38,8 @@
 
                     </div>
 
-                    <AddDiscussion/>
-
+                    <div v-if="userRole == 'admin'"><AddDiscussion/></div>
+                    
                 </div>
                
             </v-card-title>
@@ -122,7 +122,8 @@ export default {
         community: {},
         communityService: new CommunityService(),
         discussionsService: null,
-        discussions: []
+        discussions: [],
+        userRole: localStorage.getItem('role')
     }),
     created(){
         var id = this.$route.params.id;

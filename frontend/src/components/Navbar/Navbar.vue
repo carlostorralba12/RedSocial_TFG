@@ -138,6 +138,7 @@ export default {
                     else{
                         _this.user = res.user;
                         localStorage.setItem('role', res.user.role);
+                        localStorage.setItem('idUser', res.user._id);
                         if(_this.user.image != null){
                             _this.image = true;
                         }

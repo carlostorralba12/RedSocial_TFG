@@ -24,7 +24,7 @@
         
         <v-card>
 
-            <v-card-title class="headline grey lighten-2">
+            <v-card-title class="headline success lighten-2">
                 Añadir Discusion
             </v-card-title>
 
