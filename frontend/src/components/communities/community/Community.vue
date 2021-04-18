@@ -29,7 +29,7 @@
                             :to="{ name: 'Discussions', params: {idCom: community._id } }"
                             
                         >
-                            <span> Discusiones</span> 
+                            <span> Debates</span> 
                             
                         </v-btn>
                     </div>

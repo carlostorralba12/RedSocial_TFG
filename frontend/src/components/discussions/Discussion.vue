@@ -42,7 +42,7 @@
                         
                         <div class="title-card">
 
-                            <span>Posts</span>
+                            <span>Comentarios</span>
                             <AddPost v-bind:idUser="userId"></AddPost>
 
                         </div>
@@ -117,7 +117,7 @@
                         >
                             mdi-arrow-left
                         </v-icon>
-                        <span> Discusiones</span> 
+                        <span> Debates</span> 
 
                     </v-btn>
 
