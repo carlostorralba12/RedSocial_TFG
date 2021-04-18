@@ -177,6 +177,91 @@ function getDiscussions(req, res){
 
 }
 
+// POSTS
+function addPost(req, res){
+    var communityId = req.params.idCom;
+    var discussionId = req.params.idDis;
+
+    var post = req.body;
+    //controlar discussiones repetidas
+    Community.findById(communityId, (err, community) => {
+        if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
+        var discussion = community.discussions.find(discussionItem => discussionItem._id == discussionId);
+        //return res.status(200).send({discussion: discussion});
+
+        for(var i in community.discussions){
+            if(community.discussions[i]._id ==  discussion._id){
+                community.discussions[i].posts.push(post);
+            }
+        }
+        Community.findByIdAndUpdate(communityId, community, {new: true} ,(err, communityUpdated) => {
+            if(err) return res.status(500).send({message: 'Error al actualizar una comunidad'});
+            if(communityUpdated){
+                const discussionSend = communityUpdated.discussions.find(discussionItem => discussionItem.title == discussion.title);
+                return res.status(200).send({post: discussionSend.posts});
+            }
+        });
+
+    });
+}
+
+
+function deletePost(req, res){
+    var communityId = req.params.idCom;
+    var discussionId = req.params.idDis;
+    var postId = req.params.idPost;
+
+    Community.findById(communityId, (err, community) => {
+        if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
+
+        var discussion = community.discussions.find(discussionItem => discussionItem._id == discussionId);
+
+        for(var i in community.discussions){
+            if(community.discussions[i]._id ==  discussion._id){
+                community.discussions[i].posts.remove(postId);
+            }
+        }
+        Community.findByIdAndUpdate(communityId, community, {new: true} ,(err, communityUpdated) => {
+            if(err) return res.status(500).send({message: 'Error al actualizar una comunidad'});
+            if(communityUpdated){
+                return res.status(200).send({posts: discussion.posts});
+            }
+        });
+    });
+}
+
+function updatePost(req, res){
+    var communityId = req.params.idCom;
+    var discussionId = req.params.idDis;
+    var postId = req.params.idPost;
+
+    var post = req.body;
+    var postUpdated;
+    Community.findById(communityId, (err, community) => {
+        if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
+
+        var discussion = community.discussions.find(discussionItem => discussionItem._id == discussionId);
+
+        for(var i in community.discussions){
+            if(community.discussions[i]._id ==  discussion._id){
+                for(var j in community.discussions[i].posts){
+                    if(community.discussions[i].posts[j]._id == postId){
+                        community.discussions[i].posts[j].body = post.body;
+                        postUpdated = community.discussions[i].posts[j];
+                    }
+                }
+            }
+        }
+        Community.findByIdAndUpdate(communityId, community, {new: true} ,(err, communityUpdated) => {
+            if(err) return res.status(500).send({message: 'Error al actualizar una comunidad'});
+            if(communityUpdated){
+                return res.status(200).send({post: postUpdated});
+            }
+        });
+    });
+}
+
+
 module.exports = {
     saveCommunity,
     deleteCommunity,
@@ -187,5 +272,8 @@ module.exports = {
     deleteDiscussion,
     updateDiscussion,
     getDiscussion,
-    getDiscussions
+    getDiscussions,
+    addPost,
+    deletePost,
+    updatePost
 }

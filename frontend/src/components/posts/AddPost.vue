@@ -9,46 +9,36 @@
 
             <v-btn
                 rounded
-                color="indigo"
+                color="success"
                 dark
                 v-bind="attrs"
                 v-on="on"
             >
-                Editar 
+                Añadir 
                 <v-icon right>
-                    mdi-pencil
+                    mdi-plus
                 </v-icon>
             </v-btn>
 
         </template>
-        
+
         <v-card>
 
-            <v-card-title class="headline grey lighten-2">
-                Editar Discusion
+            <v-card-title class="headline success lighten-2">
+                Añadir Post
             </v-card-title>
 
-            <v-card-text>
+              <v-card-text>
 
                 <v-container>
 
-                    <v-form v-model="discussionForm">
+                    <v-form v-model="postForm">
 
-                         <v-text-field
-                            v-model= discussion.title
-                            label="Título"
-                            placeholder="Discusion"
+                        <v-textarea
+                            v-model=body
                             outlined
-                            rounded
                             required
-                            dense
-                        ></v-text-field>
-
-                           <v-textarea
-                                v-model= discussion.description
-                                outlined
-                                required
-                                label="Descripción"
+                            label="Cuerpo"
                         ></v-textarea>
 
                     </v-form>
@@ -72,8 +62,8 @@
                 <v-btn
                     color="primary"
                     text
-                    :disabled="!discussionForm"
-                    @click="updateDiscussion()"
+                    :disabled="!postForm"
+                    @click="savePost()"
                 >
                     Confirmar
                 </v-btn>
@@ -82,45 +72,49 @@
 
 
         </v-card>
-
+        
     </v-dialog>
 
 </template>
 
 <script>
-import DiscussionsService from '../../services/discussions.service'
+import PostsService from '../../services/posts.service';
 export default {
-    name: 'AddDiscussion',
-    props: ['discussion'],
+    name: 'AddPost',
+    props: ['idUser'],
     data: () => ({
-        discussionForm: false,
+        postForm: false,
         dialog: false,
-        discussionsService: null
+        body: undefined,
+        postsService: null
     }),
-
     methods: {
-        updateDiscussion(){
+        savePost(){
             var idCom = this.$route.params.idCom;
             var idDis = this.$route.params.idDis;
-            this.discussionsService = new DiscussionsService(idCom);
+            this.postsService = new PostsService(idCom, idDis);
             this.dialog = false;
             var _this = this;
-            const discussionUpdate = JSON.stringify({
-                title: this.discussion.title,
-                description: this.discussion.description
+
+            const post = JSON.stringify({
+                body: this.body,
+                idUser: this.idUser
             });
-            this.discussionsService.updateDiscussion(idDis,discussionUpdate).then((res) => {
-               if(res){
+
+            this.postsService.savePost(post).then((res) => {
+                 if(res){
                     if(res.message){
                         alert(res.message);
                     }
                     else{
-                        alert('Discusion actualizada');
+                        alert('Post almacenada');
                         location.reload();
                     }
                 }
             });
         }
+      
     }
+
 }
 </script>

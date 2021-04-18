@@ -13,9 +13,11 @@ var communitySchema = Schema({
     discussions: [{
         title: String,
         description: String,
+        idUser: String,
         //posts
         posts: [{
-            body: String
+            body: String,
+            idUser:String
         }]
     }]
 
