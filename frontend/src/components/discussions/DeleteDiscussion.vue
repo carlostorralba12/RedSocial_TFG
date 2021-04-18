@@ -20,11 +20,11 @@
         <v-card>
 
             <v-card-title class="error lighten-2" dark>
-                Eliminar comunidad
+                Eliminar discusión
             </v-card-title>
 
             <v-card-text style="text-align: center; font-size: 16px; margin-top: 7px">
-                ¿Quieres eliminar la comunidad?
+                ¿Quieres eliminar la discusión?
             </v-card-text>
 
             <v-divider></v-divider>
@@ -43,7 +43,7 @@
                 <v-btn
                     color="primary"
                     text
-                    @click="deleteCommunity()"
+                    @click="deleteDiscussion()"
                 >
                 Aceptar
                 </v-btn>
@@ -56,25 +56,27 @@
 </template>
 
 <script>
-import CommunityService from '../../services/community.service';
+import DiscussionsService from '../../services/discussions.service'
 export default {
-    name: 'DeleteCommunity',
-    props: ['idCommunity'],
+    name: 'DeleteDiscussion',
     data: () => ({
         dialog: false,
-        communityService: new CommunityService()
+        discussionsService: null,
     }),
     methods: {
-        deleteCommunity(){
-            this.communityService.deleteCommunity(this.idCommunity).then((res) => {
+        deleteDiscussion(){
+            var idCom = this.$route.params.idCom;
+            var idDis = this.$route.params.idDis;
+            this.discussionsService = new DiscussionsService(idCom);
+            this.discussionsService.deleteDiscussion(idDis).then((res) => {
                 if(res){
                     if(res.message){
                         alert(res.message);
                         location.reload();
                     }
                     else {
-                        alert("Comunidad eliminada");
-                        location.href = '/communities'
+                        alert("Discusión eliminada");
+                        location.href = '/community/' + idCom + '/discussions';
                     }
                 }
             });

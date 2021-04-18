@@ -1,5 +1,6 @@
 <template>
-     <v-dialog
+    
+    <v-dialog
         v-model="dialog"
         width="500"
     >
@@ -20,11 +21,11 @@
         <v-card>
 
             <v-card-title class="error lighten-2" dark>
-                Eliminar comunidad
+                Eliminar Post
             </v-card-title>
 
             <v-card-text style="text-align: center; font-size: 16px; margin-top: 7px">
-                ¿Quieres eliminar la comunidad?
+                ¿Quieres eliminar el post?
             </v-card-text>
 
             <v-divider></v-divider>
@@ -43,7 +44,7 @@
                 <v-btn
                     color="primary"
                     text
-                    @click="deleteCommunity()"
+                    @click="deletePost()"
                 >
                 Aceptar
                 </v-btn>
@@ -53,33 +54,39 @@
         </v-card>
 
     </v-dialog>
+
 </template>
 
 <script>
-import CommunityService from '../../services/community.service';
+import PostsService from '../../services/posts.service';
 export default {
-    name: 'DeleteCommunity',
-    props: ['idCommunity'],
+    name: 'DeletePost',
+    props: ['idPost'],
     data: () => ({
         dialog: false,
-        communityService: new CommunityService()
+        body: undefined,
+        postsService: null
     }),
     methods: {
-        deleteCommunity(){
-            this.communityService.deleteCommunity(this.idCommunity).then((res) => {
-                if(res){
+          deletePost(){
+            var idCom = this.$route.params.idCom;
+            var idDis = this.$route.params.idDis;
+            this.postsService = new PostsService(idCom, idDis);
+            this.dialog = false;
+            var _this = this;
+
+            this.postsService.deletePost(this.idPost).then((res) => {
+                 if(res){
                     if(res.message){
                         alert(res.message);
-                        location.reload();
                     }
-                    else {
-                        alert("Comunidad eliminada");
-                        location.href = '/communities'
+                    else{
+                        alert('Post eliminada');
+                        location.reload();
                     }
                 }
             });
         }
     }
-    
 }
 </script>
