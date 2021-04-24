@@ -7,7 +7,8 @@ const Community = require('../models/community');
 function inicializeCommunity(com){
     var community = new Community();
     community.name = com.name;
-    community.descripcion = com.descripcion;
+    community.orphaCode = com.orphaCode;
+    community.description = com.description;
     community.symtoms = com.symtoms;
     community.causes = com.causes;
     community.treatment = com.treatment;
