@@ -350,7 +350,7 @@ function followUser(req, res){
 
 function unfollowUser(req, res){
 
-    var idUser =  req.body.id;
+    var idUser = req.body.id;
     var id = req.params.id;
     User.findById(id, (err, userFind) => {
         if(err) return res.status(500).send({message: 'Error en la petición'});

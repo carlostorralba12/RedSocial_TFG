@@ -91,6 +91,42 @@ export default class UserService {
                 return respuesta.json();
         })
     }
+    followUser(idFollow, id){
+        var url = this.API_URL + id + '/follow/user/';
+   
+        var token = localStorage.getItem("token");
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type':'application/json',
+                'Authorization': token
+            },
+            body: idFollow
+
+        }).then(function (respuesta) {
+            //console.log(respuesta);
+            if (respuesta.ok)
+                return respuesta.json();
+        })
+    }
+    unfollowUser(idUnfollow, id){
+        var url = this.API_URL + id + '/unfollow/user/';
+
+        var token = localStorage.getItem("token");
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type':'application/json',
+                'Authorization': token
+            },
+            body: idUnfollow
+
+        }).then(function (respuesta) {
+            //console.log(respuesta);
+            if (respuesta.ok)
+                return respuesta.json();
+        })
+    }
   
 }
   

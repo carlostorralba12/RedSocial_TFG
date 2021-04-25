@@ -22,6 +22,7 @@
             color="success"
             dark
             to="/addUser"
+            v-if="userRole == 'admin'"
         >
             Añadir 
             <v-icon right>

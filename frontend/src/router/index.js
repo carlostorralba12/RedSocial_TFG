@@ -59,7 +59,7 @@ const routes = [
     component: ProfileUser,
     meta: {
       requiresAuth: true,
-      is_admin: true
+      //is_admin: true
     }
 
   },
@@ -77,7 +77,7 @@ const routes = [
     component: Users,
     meta: {
       requiresAuth: true,
-      is_admin: true
+      //is_admin: true
     }
   },
   {

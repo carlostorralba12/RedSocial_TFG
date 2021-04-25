@@ -1,7 +1,7 @@
 <template>
     <v-container>
 
-         <v-card style="margin: 0 5%">
+         <v-card>
 
             <v-img  max-height="450" src='../../assets/discussions.jpg'></v-img>
 
@@ -65,7 +65,7 @@
 
                                         <div class="title-card">
 
-                                            <UsuarioPostDiscussion v-bind:idUser="item.idUser"></UsuarioPostDiscussion>
+                                            <UserAvatar v-bind:idUser="item.idUser"></UserAvatar>
                                             <div v-if="userRole == 'admin' || userId == item.idUser">
                                                  <DeletePost v-bind:idPost="item._id"></DeletePost>
                                             </div>
@@ -141,7 +141,7 @@
 import DiscussionsService  from '../../services/discussions.service'
 import UpdateDiscussion from './UpdateDiscussion';
 import DeleteDiscussion from './DeleteDiscussion';
-import UsuarioPostDiscussion from './UsuarioPostDiscussion'
+import UserAvatar from '../users/UserAvatar'
 import AddPost from '../posts/AddPost'
 import DeletePost from '../posts/DeletePost'
 export default {
@@ -149,7 +149,7 @@ export default {
     components: {
         UpdateDiscussion,
         DeleteDiscussion,
-        UsuarioPostDiscussion,
+        UserAvatar,
         AddPost,
         DeletePost
     },

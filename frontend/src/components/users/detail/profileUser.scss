@@ -1,13 +1,22 @@
 @import '../../../styles/global.scss';
 
 .user-info-container{
-    margin:2.5%;
-    position:absolute; 
+    //margin: 2.5% 0;
+    position: absolute; 
     top: 100px;
-
-    .buttons-acctions{
-        
-        
-    }
-
+    width: 100%;
 }
+.card-text{
+    display: flex;
+    justify-content: space-between;
+   
+}
+.follows{
+    .card-title{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+    
