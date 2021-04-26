@@ -21,11 +21,11 @@
         <v-card>
 
             <v-card-title class="error lighten-2" dark>
-                Eliminar Post
+                Eliminar Comentario
             </v-card-title>
 
             <v-card-text style="text-align: center; font-size: 16px; margin-top: 7px">
-                ¿Quieres eliminar el post?
+                ¿Quieres eliminar el comentario?
             </v-card-text>
 
             <v-divider></v-divider>
@@ -81,7 +81,7 @@ export default {
                         alert(res.message);
                     }
                     else{
-                        alert('Post eliminada');
+                        alert('Comentario eliminado');
                         location.reload();
                     }
                 }

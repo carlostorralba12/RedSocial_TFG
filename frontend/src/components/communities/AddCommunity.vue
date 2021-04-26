@@ -38,11 +38,17 @@
                             v-model= name
                             label="Nombre"
                             placeholder="Enfermedad rara"
+                            :rules="rules"
                             outlined
                             rounded
-                            required
                             dense
                         ></v-text-field>
+                         <v-textarea
+                            :rules="rules"
+                            v-model=description
+                            outlined
+                            label="Descripción"
+                        ></v-textarea>
                         <v-row>
 
                            <v-col
@@ -115,10 +121,11 @@
                     Cancelar
                 </v-btn>
                 <v-btn
+                    @click=saveCommunity()
                     color="primary"
                     text
+                    type="submit"
                     :disabled="!communityForm"
-                    @click="saveCommunity()"
                 >
                     Confirmar
                 </v-btn>
@@ -140,9 +147,13 @@ export default {
         dialog: false,
         name: undefined,
         symtoms: undefined,
+        description: undefined,
         causes: undefined,
         treatment: undefined,
         other: undefined,
+        rules: [
+            v => !!v || 'Este campo es obligatorio'
+        ],
         communityService: new CommunityService()
     }),
     methods:{
@@ -150,6 +161,7 @@ export default {
             this.dialog = false;
             const community = JSON.stringify({
                 name: this.name,
+                description: this.description,
                 symtoms: this.symtoms,
                 causes: this.causes,
                 treatment: this.treatment,

@@ -25,7 +25,7 @@
         <v-card>
 
             <v-card-title class="headline success lighten-2">
-                Añadir Post
+                Añadir Comentario
             </v-card-title>
 
               <v-card-text>
@@ -35,6 +35,7 @@
                     <v-form v-model="postForm">
 
                         <v-textarea
+                            :rules="rules"
                             v-model=body
                             outlined
                             required
@@ -86,7 +87,10 @@ export default {
         postForm: false,
         dialog: false,
         body: undefined,
-        postsService: null
+        postsService: null,
+        rules: [
+            v => !!v || 'Este campo es obligatorio'
+        ],
     }),
     methods: {
         savePost(){
@@ -107,7 +111,7 @@ export default {
                         alert(res.message);
                     }
                     else{
-                        alert('Post almacenada');
+                        alert('Comentario almacenado');
                         location.reload();
                     }
                 }

@@ -20,11 +20,11 @@
         <v-card>
 
             <v-card-title class="error lighten-2" dark>
-                Eliminar discusión
+                Eliminar Debate
             </v-card-title>
 
             <v-card-text style="text-align: center; font-size: 16px; margin-top: 7px">
-                ¿Quieres eliminar la discusión?
+                ¿Quieres eliminar el debate?
             </v-card-text>
 
             <v-divider></v-divider>
@@ -75,7 +75,7 @@ export default {
                         location.reload();
                     }
                     else {
-                        alert("Discusión eliminada");
+                        alert("Debate eliminado");
                         location.href = '/community/' + idCom + '/discussions';
                     }
                 }
