@@ -117,7 +117,7 @@
 
                 </v-col>
 
-                <v-col class="text-right"  v-if="userRole == 'admin'">
+                <v-col class="text-right"  v-if="userRole == 'admin' || userLogged == user._id">
                     
                     <EditUser @clicked="checkUpdate"/>
                     <!--DIALOG TO REMOVE ACCOUNT-->
@@ -199,6 +199,7 @@
                                     <v-card
                                         class="mx-auto"
                                         color="secondary"
+                                        style="margin-bottom: 1%"
                                         dark
                                     >
 
@@ -211,6 +212,7 @@
                                                     color="error"
                                                     dark
                                                     @click="unfollowUser(userFollow._id)"
+                                                    v-if="userLogged == user._id"
                                                 >
                                                     <v-icon left color="secondary">mdi-heart-broken</v-icon>
                                                     
@@ -221,7 +223,6 @@
                                             </div>
                                            
                                             
-
                                         </v-card-title>
 
                                         <v-card-actions>
@@ -244,10 +245,10 @@
 
                             <div class="text-center">
                                 <v-pagination
-                                v-model="pageNumber"
+                                v-model="pageNumberUsers"
                                 :length="lengthItemsPaginationUsers"
                                 :total-visible="7"
-                                @input="nextPage"
+                                @input="nextPageUsers"
                                 circle
                                 >
                                 </v-pagination>                   
@@ -276,27 +277,40 @@
                                         class="mx-auto"
                                         color="#26c6da"
                                         dark
+                                        style="margin-bottom: 1%"
                                     >
 
                                         <v-card-title>
-
-                                            <span class="headline font-weight-bold"> {{community._id}}</span>
+                                            <CommunityAvatar v-bind:idCom="community._id"></CommunityAvatar>
+                                           
                                         
-
                                         </v-card-title>
 
                                         <v-card-actions>
-                                            
-                                            <v-btn
-                                                rounded
-                                                color="info"
-                                                dark
-                                                style="margin: 0 0 0 auto"
-                                                :to="{ name: 'Community', params: {id: community._id } }"
+                                            <div class="community-actions">
+                                                <v-btn
+                                                    rounded
+                                                    color="info"
+                                                    dark
+                                                    :to="{ name: 'Community', params: {id: community._id } }"
 
+                                                    >
+                                                    Detalles
+                                                </v-btn>
+                                                 <v-btn
+                                                    rounded
+                                                    color="error"
+                                                    dark
+                                                    v-if="userLogged == user._id"
+                                                    @click="unfollowCommunity(community._id)"
                                                 >
-                                                Detalles
-                                            </v-btn>
+                                                    <v-icon left color="secondary">mdi-heart-broken</v-icon>
+                                                    
+                                                    <span> Dejar de seguir</span> 
+                                                    
+                                                </v-btn> 
+                                            </div>
+                                           
 
                                         </v-card-actions>
 
@@ -308,10 +322,10 @@
 
                             <div class="text-center">
                                 <v-pagination
-                                v-model="pageNumber"
+                                v-model="pageNumberCommunities"
                                 :length="lengthItemsPaginationCommunities"
                                 :total-visible="7"
-                                @input="nextPage"
+                                @input="nextPageCommunities"
                                 circle
                                 >
                                 </v-pagination>                   
@@ -340,17 +354,20 @@ import UserService from '../../../services/user.service';
 import ImageService from '../../../services/image.service';
 import EditUser from './edit/EditUser';
 import UserAvatar from '../UserAvatar'
+import CommunityAvatar from '../../communities/CommunityAvatar'
 export default {
     name: 'ProfileUser',
     components: {
         EditUser,
-        UserAvatar
+        UserAvatar,
+        CommunityAvatar
     },
     data: () => ({
         dialog: false,
         detailUser: false,
         user: {},
-        pageNumber: 1,
+        pageNumberUsers: 1,
+        pageNumberCommunities:1,
         size: 3,
         lengthItemsPaginationUsers: 0,
         lengthItemsPaginationCommunities: 0,
@@ -387,11 +404,17 @@ export default {
                         if(usersLength % 3 == 0){
                             _this.lengthItemsPaginationUsers = parseInt(usersLength/3);
                         }
+                        else {
+                             _this.lengthItemsPaginationUsers = parseInt(usersLength/3) + 1;
+                        }
 
                     }
                     if(communitiesLength > 3){
                         if(communitiesLength % 3 == 0){
                             _this.lengthItemsPaginationCommunities = parseInt(communitiesLength/3);
+                        }
+                        else {
+                             _this.lengthItemsPaginationCommunities = parseInt(communitiesLength/3) + 1;
                         }
                         
                     }
@@ -494,6 +517,25 @@ export default {
                 }
             });
         },
+        unfollowCommunity(communityId){
+            const communityToUnfollow = JSON.stringify({
+                id: communityId
+            });
+            this.userService.unfollowCommunity(communityToUnfollow,this.userLogged).then((res) => {
+                if(res){
+                    if(res.message){
+                        alert(res.message);
+                    }
+                    else {
+                        if(res.communities){
+                            alert('Has dejado de seguir a la comunidad');
+                            location.reload();
+                        }
+                      
+                    }
+                }
+            });
+        },
         checkUpdate(value) {
             this.updated = value;
             if(value){
@@ -503,8 +545,11 @@ export default {
             
            
         },
-         nextPage(page) {
-            this.pageNumber = page;
+        nextPageUsers(page) {
+            this.pageNumberUsers = page;
+        },
+        nextPageCommunities(page){
+            this.pageNumberCommunities = page;
         }
         
     },
@@ -515,7 +560,7 @@ export default {
             return Math.ceil(l / s) - 1;
         },
         paginatedUsers() {
-            const start = this.pageNumber * this.size - this.size,
+            const start = this.pageNumberUsers * this.size - this.size,
                 end = start + this.size;
             return this.users.slice(start, end);
         },
@@ -525,7 +570,7 @@ export default {
             return Math.ceil(l / s) - 1;
         },
         paginatedCommunities() {
-            const start = this.pageNumber * this.size - this.size,
+            const start = this.pageNumberCommunities * this.size - this.size,
                 end = start + this.size;
             return this.communities.slice(start, end);
         }

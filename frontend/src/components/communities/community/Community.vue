@@ -10,14 +10,14 @@
                
                 <div class="title-card">
                     
-                    <div class="title-logo">
+                    <div class="title-community">
                         <v-img
                             alt="Vuetify Logo"
                             class="shrink mr-2"
                             contain
                             :src="require('../../../assets/iconoRadis.png')" 
                             transition="scale-transition"
-                            width="45"
+                            width="60"
                         />
 
                         <span class="headline font-weight-bold">{{community.name}} </span>
@@ -36,20 +36,19 @@
                     <DeleteCommunity v-if="userRole == 'admin'" v-bind:idCommunity="community._id"></DeleteCommunity>
                 </div>
                 
-         
-                
             </v-card-title>
 
             <v-card-text class="title font-weight-bold">
-
+                {{community.description}}
                 <div class="card-row">
 
-                    <div class="card">
+                    <div class="card" v-if="community.symtoms">
                         <v-card
                             class="mx-auto"
                             color="#26c6da"
                             dark
                         >
+                            
                             <v-card-title>Síntomas</v-card-title>
                             <v-card-text class="title font-weight-bold">
                                 {{community.symtoms}}
@@ -58,7 +57,7 @@
                         </v-card>
                     </div>
 
-                    <div class="card">
+                    <div class="card" v-if="community.causes">
                          <v-card
                             class="mx-auto"
                             color="#26c6da"
@@ -73,7 +72,7 @@
                     
                 </div>
                 <div class="card-row">
-                   <div class="card">
+                   <div class="card" v-if="community.treatment">
                          <v-card
                             class="mx-auto"
                             color="#26c6da"
@@ -85,7 +84,7 @@
                             </v-card-text>
                         </v-card>
                     </div>
-                    <div  class="card">
+                    <div class="card" v-if="community.other">
                          <v-card
                             class="mx-auto"
                             color="#26c6da"
@@ -129,22 +128,55 @@
 
                 <div v-else>
 
-                    <v-btn
-                        rounded
-                        color="secondary"
-                        dark
-                    >
-                        <v-icon left color="error">mdi-heart</v-icon>
+                   <template v-if="checkFollow">
+
+                        <v-btn
+                            rounded
+                            color="error"
+                            dark
+                            @click="unfollowCommunity(community._id)"
+                        >
+                            <v-icon left color="secondary">mdi-heart-broken</v-icon>
+                            
+                            <span> Dejar de seguir</span> 
+                            
+                        </v-btn> 
+
+                    </template>
+
+                    <template v-else>
+
+                        <v-btn
+                            rounded
+                            color="error"
+                            dark
+                            @click="followCommunity(community._id)"
+                        >
+                            <v-icon left color="secondary">mdi-heart</v-icon>
+                            
+                            <span> Seguir</span> 
+                            
+                        </v-btn> 
                         
-                        <span> Seguir</span> 
-                        
-                    </v-btn>
+                    </template>
 
                 </div>
             
             </v-card-actions>
 
         </v-card>
+        
+  <v-footer padless v-if="community.orphaCode">
+    <v-col
+      class="text-center"
+      cols="12"
+    >
+
+      Para más información accede a 
+        <v-btn color="#d42c56" dark rounded :href="'https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=ES&Expert=' + community.orphaCode" target="_blank">Orphanet</v-btn> 
+    </v-col>
+  </v-footer>
+
 
     </v-container>   
             
@@ -157,6 +189,7 @@
 import DeleteCommunity from '../DeleteCommunity'
 import UpdateCommunity from '../UpdateCommunity'
 import CommunityService from '../../../services/community.service'
+import UserService from '../../../services/user.service';
 export default {
     name: 'Community',
     components: {
@@ -166,7 +199,10 @@ export default {
     data: () => ({
         community: {},
         communityService: new CommunityService(),
-        userRole: localStorage.getItem('role')
+        userRole: localStorage.getItem('role'),
+        userService: new UserService('users/'),
+        checkFollow: false,
+        userLogged: localStorage.getItem('idUser')
     }),
     created(){
         var id = this.$route.params.id;
@@ -181,6 +217,69 @@ export default {
                 }
             }
         });
+         
+        this.userService.getUser(this.userLogged).then((res) => {
+            if(res){
+                if(res.message){
+                    alert(res.message);
+                    
+                }
+                else{
+                        
+                    for(var community of res.user.communities){
+                        
+                        if(_this.community._id == community._id){
+                            //console.log(community._id);
+                            _this.checkFollow = true;
+                            break;
+                            
+                        }
+                    }
+
+                }
+            }
+        });
+          
+    },
+    methods:{
+        unfollowCommunity(communityId){
+            const communityToUnfollow = JSON.stringify({
+                id: communityId
+            });
+            this.userService.unfollowCommunity(communityToUnfollow,this.userLogged).then((res) => {
+                if(res){
+                    if(res.message){
+                        alert(res.message);
+                    }
+                    else {
+                        if(res.communities){
+                            alert('Has dejado de seguir a la comunidad');
+                            location.reload();
+                        }
+                      
+                    }
+                }
+            });
+        },
+        followCommunity(communityId){
+            const communityToFollow = JSON.stringify({
+                id: communityId
+            });
+            this.userService.followCommunity(communityToFollow,this.userLogged).then((res) => {
+                if(res){
+                    if(res.message){
+                        alert(res.message);
+                    }
+                    else {
+                        if(res.communities){
+                            //alert('Has dejado de seguir al usuario');
+                            location.reload();
+                        }
+                      
+                    }
+                }
+            });
+        },
     }
 }
 </script>
