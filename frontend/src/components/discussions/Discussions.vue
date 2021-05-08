@@ -2,7 +2,7 @@
 
     <v-container>
 
-         <v-card style="margin: 0 5%">
+         <v-card>
 
             <v-img  max-height="450" src='../../assets/discussions.jpg'></v-img>
 

@@ -268,6 +268,115 @@ function deleteUser(req, res) {
 }
 
 
+//Follows
+
+function followCommunity(req, res){
+
+    var idCom =  req.body.id;
+    var id = req.params.id;
+    User.findById(id, (err, userFind) => {
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+        if(!userFind) return res.status(404).send({message: 'El usuario no existe'});
+        const communityToFollow = userFind.communities.find(communityId => communityId._id == idCom);
+        if(communityToFollow){
+            return res.status(200).send({message: 'Ya sigues a esta comunidad'});
+        }
+        userFind.communities.push(idCom);
+
+        User.findByIdAndUpdate(id, userFind, {new: true}, (err, userUpdated) => {
+            if(err) return res.status(500).send({message: 'Error en la petición'});
+            if(!userUpdated) return res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+            userUpdated.password = undefined;
+          
+            return res.status(200).send({communities: userUpdated.communities});
+        });
+       
+
+    });
+}
+
+function unfollowCommunity(req, res){
+
+    var idCom =  req.body.id;
+    var id = req.params.id;
+    User.findById(id, (err, userFind) => {
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+        if(!userFind) return res.status(404).send({message: 'El usuario no existe'});
+        const communityToFollow = userFind.communities.find(communityId => communityId._id == idCom);
+        if(!communityToFollow){
+            return res.status(200).send({message: 'No sigues a esa comunidad'});
+        }
+        userFind.communities.remove(idCom);
+
+        User.findByIdAndUpdate(id, userFind, {new: true}, (err, userUpdated) => {
+            if(err) return res.status(500).send({message: 'Error en la petición'});
+            if(!userUpdated) return res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+            userUpdated.password = undefined;
+          
+            return res.status(200).send({communities: userUpdated.communities});
+        });
+       
+
+    });
+}
+
+function followUser(req, res){
+
+    var idUser =  req.body.id;
+    var id = req.params.id;
+    User.findById(id, (err, userFind) => {
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+        if(!userFind) return res.status(404).send({message: 'El usuario no existe'});
+        if(userFind._id == idUser){
+            return res.status(200).send({message: 'No puedes seguirte a ti mismo'});
+        }
+        const userTofollow = userFind.users.find(user => user._id == idUser);
+        if(userTofollow){
+            return res.status(200).send({message: 'Ya sigues a esta usuario'});
+        }
+        userFind.users.push(idUser);
+
+        User.findByIdAndUpdate(id, userFind, {new: true}, (err, userUpdated) => {
+            if(err) return res.status(500).send({message: 'Error en la petición'});
+            if(!userUpdated) return res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+            userUpdated.password = undefined;
+          
+            return res.status(200).send({users: userUpdated.users});
+        });
+       
+
+    });
+}
+
+function unfollowUser(req, res){
+
+    var idUser = req.body.id;
+    var id = req.params.id;
+    User.findById(id, (err, userFind) => {
+        if(err) return res.status(500).send({message: 'Error en la petición'});
+        if(!userFind) return res.status(404).send({message: 'El usuario no existe'});
+        if(userFind._id == idUser){
+            return res.status(200).send({message: 'No puedes seguirte a ti mismo'});
+        }
+        const userTofollow = userFind.users.find(user => user._id == idUser);
+        if(!userTofollow){
+            return res.status(200).send({message: 'No sigues a este usuario'});
+        }
+        userFind.users.remove(idUser);
+
+        User.findByIdAndUpdate(id, userFind, {new: true}, (err, userUpdated) => {
+            if(err) return res.status(500).send({message: 'Error en la petición'});
+            if(!userUpdated) return res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+            userUpdated.password = undefined;
+          
+            return res.status(200).send({users: userUpdated.users});
+        });
+       
+
+    });
+}
+
+
 module.exports = {
     login,
     register,
@@ -276,5 +385,9 @@ module.exports = {
     updateUser,
     getUsers,
     getProfile,
-    saveUser
+    saveUser,
+    followCommunity,
+    unfollowCommunity,
+    followUser,
+    unfollowUser
 }

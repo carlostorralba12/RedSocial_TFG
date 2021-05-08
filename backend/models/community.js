@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var communitySchema = Schema({
     name: String,
+    orphaCode: String,
     description: String,
     symtoms: String,
     causes: String,

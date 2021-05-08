@@ -32,7 +32,7 @@
 <script>
 import UserService from '../../services/user.service';
 export default {
-    name: 'UsuarioPostDiscussion',
+    name: 'UserAvatar',
     props: ['idUser'],
     data: () => ({
         userService:  new UserService('users/'),

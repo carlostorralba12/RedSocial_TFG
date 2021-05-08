@@ -49,13 +49,9 @@
 
                     </v-card-title>
 
-                    <v-card-text class="title font-weight-bold">
-                        {{item.causes}}
-                    </v-card-text>
-
                     <v-card-actions>
 
-                        <div style="width: 100%">
+                        <div style="margin: 0 0 0 auto">
 
                             <v-btn
                                 rounded
@@ -66,27 +62,6 @@
                                 >
                                 Detalles
                             </v-btn>
-
-                        </div>
-
-                        <div v-if="userRole == 'admin'">
-                           
-                           <DeleteCommunity v-bind:idCommunity="item._id"></DeleteCommunity>
-
-                        </div>
-
-                        <div v-else>
-
-                            <v-btn
-                                rounded
-                                color="secondary"
-                                dark
-                            >
-                                <v-icon left color="error">mdi-heart</v-icon>
-                                
-                                <span> Seguir</span> 
-                                
-                            </v-btn> 
 
                         </div>
                     
@@ -121,6 +96,7 @@
 import AddCommunity from './AddCommunity';
 import DeleteCommunity from './DeleteCommunity';
 import CommunityService from '../../services/community.service';
+import UserService from '../../services/user.service';
 export default {
     name: 'Communities',
     components: {
@@ -134,7 +110,10 @@ export default {
         communityService: new CommunityService(),
         communities: [],
         lengthItemsPagination: 0,
-        userRole: localStorage.getItem('role')
+        userRole: localStorage.getItem('role'),
+        userLogged: localStorage.getItem('idUser'),
+        userService: new UserService('users/')
+
     }),
     created(){
         var _this = this;
@@ -154,7 +133,6 @@ export default {
                             _this.lengthItemsPagination = parseInt(communitiesLength / 3) + 1;
                         }
                      
-                       console.log(_this.lengthItemsPagination);    
                     }
                 }   
             }
@@ -163,7 +141,27 @@ export default {
     methods: {
         nextPage(page) {
             this.pageNumber = page;
-        }
+        },
+        followCommunity(communityId){
+            console.log(this.checkFollow(communityId));
+            const communityToFollow = JSON.stringify({
+                id: communityId
+            });
+            this.userService.followCommunity(communityToFollow,this.userLogged).then((res) => {
+                if(res){
+                    if(res.message){
+                        alert(res.message);
+                    }
+                    else {
+                        if(res.users){
+                            //alert('Has dejado de seguir al usuario');
+                            location.reload();
+                        }
+                      
+                    }
+                }
+            });
+        },
     },
     computed: {
         pageCount() {

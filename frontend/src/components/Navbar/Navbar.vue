@@ -27,7 +27,7 @@
         rounded
         dark
         text
-        v-if="user.role == 'admin'"
+        v-if="isAuthenticated()"
         to="/users"
       >
         Usuarios

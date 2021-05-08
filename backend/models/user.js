@@ -12,7 +12,13 @@ var userSchema = Schema({
     country: String,
     province: String,
     city: String,
-    role: String
+    role: String,
+    communities: [{
+        _id: String
+    }],
+    users: [{
+        _id: String
+    }]
 });
 
 module.exports = mongoose.model('User', userSchema);

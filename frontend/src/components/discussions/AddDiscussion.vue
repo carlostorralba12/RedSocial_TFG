@@ -25,7 +25,7 @@
         <v-card>
 
             <v-card-title class="headline success lighten-2">
-                Añadir Discusion
+                Añadir Debate
             </v-card-title>
 
             <v-card-text>
@@ -37,10 +37,10 @@
                          <v-text-field
                             v-model= title
                             label="Título"
-                            placeholder="Discusion"
+                            placeholder="Debate"
                             outlined
                             rounded
-                            required
+                            :rules="rules"
                             dense
                         ></v-text-field>
 
@@ -96,7 +96,10 @@ export default {
         dialog: false,
         title: undefined,
         description: undefined,
-        discussionsService: null
+        discussionsService: null,
+        rules: [
+            v => !!v || 'Este campo es obligatorio'
+        ],
     }),
 
     methods: {
@@ -115,7 +118,7 @@ export default {
                         alert(res.message);
                     }
                     else{
-                        alert('Discusion almacenada');
+                        alert('Debate almacenado');
                         location.reload();
                     }
                 }

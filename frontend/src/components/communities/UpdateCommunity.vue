@@ -40,9 +40,16 @@
                             placeholder="Enfermedad rara"
                             outlined
                             rounded
-                            required
+                            :rules="rules"
                             dense
                         ></v-text-field>
+                         <v-textarea
+                            v-model=community.description
+                            :rules="rules"
+                            outlined
+                            required
+                            label="Descripción"
+                        ></v-textarea>
                         <v-row>
 
                            <v-col
@@ -139,13 +146,17 @@ export default {
     data: () => ({
         communityForm: false,
         dialog: false,
-        communityService: new CommunityService()
+        communityService: new CommunityService(),
+        rules: [
+            v => !!v || 'Este campo es obligatorio'
+        ],
     }),
     methods:{
         updateCommunity(){
             this.dialog = false;
             const communityUpdate = JSON.stringify({
                 name: this.community.name,
+                description: this.community.description,
                 symtoms: this.community.symtoms,
                 causes: this.community.causes,
                 treatment: this.community.treatment,

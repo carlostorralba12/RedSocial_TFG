@@ -25,7 +25,7 @@
         <v-card>
 
             <v-card-title class="headline grey lighten-2">
-                Editar Discusion
+                Editar Debate
             </v-card-title>
 
             <v-card-text>
@@ -37,10 +37,10 @@
                          <v-text-field
                             v-model= discussion.title
                             label="Título"
-                            placeholder="Discusion"
+                            placeholder="Debate"
                             outlined
                             rounded
-                            required
+                            :rules="rules"
                             dense
                         ></v-text-field>
 
@@ -95,7 +95,10 @@ export default {
     data: () => ({
         discussionForm: false,
         dialog: false,
-        discussionsService: null
+        discussionsService: null,
+        rules: [
+            v => !!v || 'Este campo es obligatorio'
+        ],
     }),
 
     methods: {
@@ -115,7 +118,7 @@ export default {
                         alert(res.message);
                     }
                     else{
-                        alert('Discusion actualizada');
+                        alert('Debate actualizado');
                         location.reload();
                     }
                 }
