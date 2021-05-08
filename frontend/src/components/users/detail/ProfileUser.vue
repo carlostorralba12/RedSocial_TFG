@@ -186,8 +186,18 @@
 
                     <v-card>
                         
-                        <v-card-title>
+                        <v-card-title class="card-title">
                             <span>Usuarios seguidos</span>
+                            <v-responsive max-width="400">
+                                <v-text-field
+                                dense
+                                flat
+                                hide-details
+                                rounded
+                                solo-inverted
+                                outlined
+                                ></v-text-field>
+                            </v-responsive>
                         </v-card-title>
 
                         <v-card-text>
@@ -207,6 +217,25 @@
 
                                             <div class="card-title">
                                                 <UserAvatar v-bind:idUser="userFollow._id"></UserAvatar>
+                                                
+
+                                            </div>
+                                           
+                                            
+                                        </v-card-title>
+
+                                        <v-card-actions>
+                                            
+                                            <div class="card-title">
+
+                                                <v-btn
+                                                    rounded
+                                                    color="info"
+                                                    dark
+                                                    :href="'/users/' + userFollow._id"
+                                                    >
+                                                    Ver perfil
+                                                </v-btn>
                                                 <v-btn
                                                     rounded
                                                     color="error"
@@ -221,20 +250,7 @@
                                                 </v-btn> 
 
                                             </div>
-                                           
-                                            
-                                        </v-card-title>
-
-                                        <v-card-actions>
-                                                <v-btn
-                                                    rounded
-                                                    color="info"
-                                                    dark
-                                                    :href="'/users/' + userFollow._id"
-                                                    style="margin: 0 0 0 auto"
-                                                    >
-                                                    Ver perfil
-                                                </v-btn>
+                                          
                                         </v-card-actions>
 
                                     </v-card>
@@ -263,8 +279,20 @@
                 <template v-if="communities.length > 0">
 
                     <v-card style="margin-top: 2%">
-                        <v-card-title>
+                        <v-card-title class="card-title">
+
                             <span>Comunidades seguidas</span>
+                             <v-responsive max-width="400">
+                                <v-text-field
+                                dense
+                                flat
+                                hide-details
+                                rounded
+                                solo-inverted
+                                outlined
+                                ></v-text-field>
+                            </v-responsive>
+
                         </v-card-title>
 
                         <v-card-text>

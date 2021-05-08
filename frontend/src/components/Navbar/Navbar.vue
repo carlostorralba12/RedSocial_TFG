@@ -36,6 +36,7 @@
         rounded
         dark
         text 
+        v-if="isAuthenticated()"
         to="/communities"
       >
         Comunidades
