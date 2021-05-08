@@ -21,4 +21,7 @@ api.get('/community/:idCom/discussions', mdAuth.ensureAuth, CommunityController.
 api.post('/community/:idCom/discussion/:idDis/posts', mdAuth.ensureAuth, CommunityController.addPost)
 api.delete('/community/:idCom/discussion/:idDis/posts/:idPost', mdAuth.ensureAuth, CommunityController.deletePost)
 api.put('/community/:idCom/discussion/:idDis/posts/:idPost', mdAuth.ensureAuth, CommunityController.updatePost)
+//admin-community
+api.post('/community/:id/setAdmin', mdAuth.ensureAuth, CommunityController.setAdminCommunity);
+api.get('/community/:id/quitAdmin', mdAuth.ensureAuth, CommunityController.quitAdminCommunity);
 module.exports = api

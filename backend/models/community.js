@@ -10,6 +10,7 @@ var communitySchema = Schema({
     causes: String,
     treatment: String,
     other: String,
+    adminUser: String,
     //Discussions
     discussions: [{
         title: String,
