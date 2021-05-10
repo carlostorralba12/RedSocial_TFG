@@ -64,7 +64,7 @@
 
             <v-card-text class="card-text">
 
-                 <v-col class="text-left" v-if="detailUser">
+                 <v-col class="text-left" v-if="detailUser && user._id != userLogged">
                       <v-btn
                         rounded
                         color="orange darken-2"
@@ -78,6 +78,11 @@
                             mdi-arrow-left
                         </v-icon>Usuarios
                     </v-btn>
+
+                </v-col>
+                <v-col class="text-left" v-if="user.role == 'medico'">
+                    
+                    <AdminCommunities  v-bind:idUser="user._id"/>
 
                 </v-col>
 
@@ -311,7 +316,6 @@
                                         <v-card-title>
                                             <CommunityAvatar v-bind:idCom="community._id"></CommunityAvatar>
                                            
-                                        
                                         </v-card-title>
 
                                         <v-card-actions>
@@ -383,12 +387,14 @@ import ImageService from '../../../services/image.service';
 import EditUser from './edit/EditUser';
 import UserAvatar from '../UserAvatar'
 import CommunityAvatar from '../../communities/CommunityAvatar'
+import AdminCommunities from './AdminCommunities'
 export default {
     name: 'ProfileUser',
     components: {
         EditUser,
         UserAvatar,
-        CommunityAvatar
+        CommunityAvatar,
+        AdminCommunities
     },
     data: () => ({
         dialog: false,

@@ -23,7 +23,7 @@
 
                     </div>
 
-                   <div v-if="userRole == 'admin'">  <DeleteDiscussion/></div>
+                   <div v-if="userRole == 'admin' || userId == adminCommunity">  <DeleteDiscussion/></div>
                   
                 </div>
                
@@ -66,7 +66,7 @@
                                         <div class="title-card">
 
                                             <UserAvatar v-bind:idUser="item.idUser"></UserAvatar>
-                                            <div v-if="userRole == 'admin' || userId == item.idUser">
+                                            <div v-if="userRole == 'admin' || userId == item.idUser || userId == adminCommunity">
                                                  <DeletePost v-bind:idPost="item._id"></DeletePost>
                                             </div>
                                            
@@ -121,7 +121,7 @@
 
                     </v-btn>
 
-                    <div v-if="userRole == 'admin'">
+                    <div v-if="userRole == 'admin' || userId == adminCommunity">
 
                         <UpdateDiscussion v-bind:discussion="discussion"></UpdateDiscussion>
 
@@ -141,6 +141,7 @@
 import DiscussionsService  from '../../services/discussions.service'
 import UpdateDiscussion from './UpdateDiscussion';
 import DeleteDiscussion from './DeleteDiscussion';
+import CommunityService from '../../services/community.service'
 import UserAvatar from '../users/UserAvatar'
 import AddPost from '../posts/AddPost'
 import DeletePost from '../posts/DeletePost'
@@ -161,6 +162,8 @@ export default {
         discussion: {},
         posts: [],
         idCom: null,
+        adminCommunity: null,
+        communityService: new CommunityService(),
         userRole: localStorage.getItem('role'),
         userId: localStorage.getItem('idUser')
     }),
@@ -169,6 +172,17 @@ export default {
         var idDis = this.$route.params.idDis;
         this.discussionsService = new DiscussionsService(this.idCom);
         var _this = this;
+
+        this.communityService.getCommunity(this.idCom).then((res) => {
+            if(res.message){
+                alert(res.message);
+            }
+            else{
+                console.log(res.community.adminUser);
+                console.log(_this.userId);
+                _this.adminCommunity = res.community.adminUser;
+            }
+        });
         this.discussionsService.getDiscussion(idDis).then((res) => {
              if(res){
                 if(res.message){
