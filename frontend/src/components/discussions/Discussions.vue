@@ -38,7 +38,7 @@
 
                     </div>
 
-                    <div v-if="userRole == 'admin'"><AddDiscussion/></div>
+                    <div v-if="userRole == 'admin' || userLogged == community.adminUser"><AddDiscussion/></div>
                     
                 </div>
                
@@ -123,7 +123,8 @@ export default {
         communityService: new CommunityService(),
         discussionsService: null,
         discussions: [],
-        userRole: localStorage.getItem('role')
+        userRole: localStorage.getItem('role'),
+        userLogged: localStorage.getItem('idUser')
     }),
     created(){
         var id = this.$route.params.id;

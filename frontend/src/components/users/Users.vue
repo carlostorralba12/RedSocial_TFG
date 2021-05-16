@@ -31,9 +31,9 @@
         </v-btn>
             
         <div class="body-users">
-            <div  v-for="user in paginatedData" :key="user.id">
+            <div v-for="user in paginatedData" :key="user._id">
 
-                <template >
+                <template v-if="user.role != 'admin' && user._id != userLogged">
              
                     <v-card
                         class="mx-auto"
@@ -120,6 +120,7 @@ export default {
         image: false,
         lengthItemsPagination: 0,
         userRole: localStorage.getItem('role'),
+        userLogged: localStorage.getItem('idUser'),
         userService: new UserService('users'),
         users: []
     }),

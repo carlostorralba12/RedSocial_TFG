@@ -46,6 +46,18 @@
                         width="50"
                         />
                         <span class="headline font-weight-bold">{{item.name}}</span>
+                        <div style="margin: 0 0 0 auto" v-if="userRole=='admin'">
+                             <SetAdminCommunity v-if="!item.adminUser" v-bind:idCom="item._id" />
+                             <v-btn
+                                v-if="item.adminUser"
+                                color="blue-grey"
+                                class="ma-2 white--text"
+                                @click="quitAdmin(item._id)"
+                                >
+                                Quitar Administrador
+                             </v-btn>
+
+                        </div>
 
                     </v-card-title>
 
@@ -97,11 +109,13 @@ import AddCommunity from './AddCommunity';
 import DeleteCommunity from './DeleteCommunity';
 import CommunityService from '../../services/community.service';
 import UserService from '../../services/user.service';
+import SetAdminCommunity from './SetAdminCommunity';
 export default {
     name: 'Communities',
     components: {
         AddCommunity,
-        DeleteCommunity
+        DeleteCommunity,
+        SetAdminCommunity
     },
     data: () => ({
         pageNumber: 1,
@@ -162,6 +176,16 @@ export default {
                 }
             });
         },
+        quitAdmin(idCom){
+            this.communityService.quitAdminCommunity(idCom).then((res) => {
+                if(res.message){
+                    alert(res.message);
+                }
+                else{
+                    location.reload();
+                }
+            });
+        }
     },
     computed: {
         pageCount() {

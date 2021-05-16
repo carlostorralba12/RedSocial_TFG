@@ -34,6 +34,7 @@
                         </v-btn>
                     </div>
                     <DeleteCommunity v-if="userRole == 'admin'" v-bind:idCommunity="community._id"></DeleteCommunity>
+                    <UpdateCommunity v-bind:community="community" v-if="userLogged == community.adminUser"></UpdateCommunity>
                 </div>
                 
             </v-card-title>

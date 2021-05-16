@@ -1,7 +1,7 @@
 'use strict'
 
 const Community = require('../models/community');
-
+var User = require('../models/user');
 //COMMUNITIES
 
 function inicializeCommunity(com){
@@ -75,6 +75,7 @@ function getCommunity(req,res){
 
     Community.findById(communityId, (err, community) => {
         if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
+        if(!community) return res.status(404).send({message: 'La comunidad no existe'})
         return res.status(200).send({community: community});
     });
 }
@@ -262,6 +263,52 @@ function updatePost(req, res){
     });
 }
 
+//Admin community
+function setAdminCommunity(req, res){
+    var id = req.params.id;
+    var adminUser = req.body.admin;
+    Community.findById(id, (err, community) => {
+        if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
+
+        User.findById(adminUser, (err, userFind) => {
+            if(err) return res.status(500).send({message: 'Error en la petición'});
+            if(!userFind) return res.status(404).send({message: 'El usuario a administrar no existe'});
+    
+           if(userFind.role !="medico"){
+                return res.status(403).send({message: 'Usuario no tiene permisos para ser administrador'});
+           }
+    
+        });
+        community.adminUser = adminUser;
+        Community.findByIdAndUpdate(id, community, {new: true} ,(err, communityUpdated) => {
+            if(err) return res.status(500).send({message: 'Error al actualizar una comunidad'});
+            if(communityUpdated){
+                return res.status(200).send({community: communityUpdated});
+            }
+        });
+    });
+}
+
+
+//Admin community
+function quitAdminCommunity(req, res){
+    var id = req.params.id;
+    Community.findById(id, (err, community) => {
+        if(err) return res.status(500).send({message: 'Error al obtener comunidad'});
+
+        if(community.adminUser){
+            community.adminUser = null;
+        }
+       
+        Community.findByIdAndUpdate(id, community, {new: true} ,(err, communityUpdated) => {
+            if(err) return res.status(500).send({message: 'Error al actualizar una comunidad'});
+            if(communityUpdated){
+                return res.status(200).send({community: communityUpdated});
+            }
+        });
+    });
+}
+
 
 module.exports = {
     saveCommunity,
@@ -276,5 +323,7 @@ module.exports = {
     getDiscussions,
     addPost,
     deletePost,
-    updatePost
+    updatePost,
+    setAdminCommunity,
+    quitAdminCommunity
 }

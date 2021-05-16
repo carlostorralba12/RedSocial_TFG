@@ -64,7 +64,7 @@
 
             <v-card-text class="card-text">
 
-                 <v-col class="text-left" v-if="detailUser">
+                 <v-col class="text-left" v-if="detailUser && user._id != userLogged">
                       <v-btn
                         rounded
                         color="orange darken-2"
@@ -78,6 +78,11 @@
                             mdi-arrow-left
                         </v-icon>Usuarios
                     </v-btn>
+
+                </v-col>
+                <v-col class="text-left" v-if="user.role == 'medico'">
+                    
+                    <AdminCommunities  v-bind:idUser="user._id"/>
 
                 </v-col>
 
@@ -186,8 +191,18 @@
 
                     <v-card>
                         
-                        <v-card-title>
+                        <v-card-title class="card-title">
                             <span>Usuarios seguidos</span>
+                            <v-responsive max-width="400">
+                                <v-text-field
+                                dense
+                                flat
+                                hide-details
+                                rounded
+                                solo-inverted
+                                outlined
+                                ></v-text-field>
+                            </v-responsive>
                         </v-card-title>
 
                         <v-card-text>
@@ -207,6 +222,25 @@
 
                                             <div class="card-title">
                                                 <UserAvatar v-bind:idUser="userFollow._id"></UserAvatar>
+                                                
+
+                                            </div>
+                                           
+                                            
+                                        </v-card-title>
+
+                                        <v-card-actions>
+                                            
+                                            <div class="card-title">
+
+                                                <v-btn
+                                                    rounded
+                                                    color="info"
+                                                    dark
+                                                    :href="'/users/' + userFollow._id"
+                                                    >
+                                                    Ver perfil
+                                                </v-btn>
                                                 <v-btn
                                                     rounded
                                                     color="error"
@@ -221,20 +255,7 @@
                                                 </v-btn> 
 
                                             </div>
-                                           
-                                            
-                                        </v-card-title>
-
-                                        <v-card-actions>
-                                                <v-btn
-                                                    rounded
-                                                    color="info"
-                                                    dark
-                                                    :href="'/users/' + userFollow._id"
-                                                    style="margin: 0 0 0 auto"
-                                                    >
-                                                    Ver perfil
-                                                </v-btn>
+                                          
                                         </v-card-actions>
 
                                     </v-card>
@@ -263,8 +284,20 @@
                 <template v-if="communities.length > 0">
 
                     <v-card style="margin-top: 2%">
-                        <v-card-title>
+                        <v-card-title class="card-title">
+
                             <span>Comunidades seguidas</span>
+                             <v-responsive max-width="400">
+                                <v-text-field
+                                dense
+                                flat
+                                hide-details
+                                rounded
+                                solo-inverted
+                                outlined
+                                ></v-text-field>
+                            </v-responsive>
+
                         </v-card-title>
 
                         <v-card-text>
@@ -283,7 +316,6 @@
                                         <v-card-title>
                                             <CommunityAvatar v-bind:idCom="community._id"></CommunityAvatar>
                                            
-                                        
                                         </v-card-title>
 
                                         <v-card-actions>
@@ -355,12 +387,14 @@ import ImageService from '../../../services/image.service';
 import EditUser from './edit/EditUser';
 import UserAvatar from '../UserAvatar'
 import CommunityAvatar from '../../communities/CommunityAvatar'
+import AdminCommunities from './AdminCommunities'
 export default {
     name: 'ProfileUser',
     components: {
         EditUser,
         UserAvatar,
-        CommunityAvatar
+        CommunityAvatar,
+        AdminCommunities
     },
     data: () => ({
         dialog: false,
